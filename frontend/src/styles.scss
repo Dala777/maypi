@@ -1,0 +1,455 @@
+.custom-dialog {
+    .mat-mdc-dialog-container {
+        padding: 0;
+        border-radius: 1rem !important;
+        overflow: hidden;
+    }
+    .mat-mdc-dialog-content {
+        margin: 0;
+        padding: 0;
+        max-height: none;
+    }
+    // Estilos para modo oscuro
+    &.dark {
+        .sticky {
+            background-color: #2E4053 !important;
+            border-color: #808000 !important;
+        }
+    }
+    // Estilos para modo claro
+    .sticky {
+        background-color: #F2F2F2 !important;
+        border-color: #FFC107 !important;
+    }
+    // Asegurar que el diálogo tenga bordes redondeados
+    .mdc-dialog__surface {
+        border-radius: 1rem !important;
+    }
+    // Para el contenedor del diálogo de Material
+    .mat-mdc-dialog-surface {
+        border-radius: 1rem !important;
+    }
+    // Estilos para los botones
+    .mat-mdc-button-base {
+        border-radius: 0.5rem !important;
+    }
+    .mat-stroked-button {
+        border-radius: 0.5rem !important;
+    }
+    .mat-flat-button {
+        border-radius: 0.5rem !important;
+    }
+}
+
+// Estilos para las notificaciones con colores Maypi
+.success-snackbar {
+    .mdc-snackbar__surface {
+        background: linear-gradient(135deg, #FFC107 0%, #e6ad06 100%) !important;
+        color: #2E4053 !important;
+        box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3) !important;
+    }
+    .mat-mdc-snack-bar-actions {
+        .mdc-button__label {
+            color: #2E4053 !important;
+        }
+    }
+}
+
+.error-snackbar {
+    .mdc-snackbar__surface {
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+        color: #FFFFFF !important;
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3) !important;
+    }
+    .mat-mdc-snack-bar-actions {
+        .mdc-button__label {
+            color: #FFFFFF !important;
+        }
+    }
+}
+
+// === TEMA MAYPI REFINADO Y ESTÉTICO ===
+
+// Variables CSS personalizadas para Maypi
+:root {
+    --maypi-primary: #FFC107;
+    --maypi-primary-light: #FFD54F;
+    --maypi-primary-dark: #FF8F00;
+    --maypi-secondary: #2E4053;
+    --maypi-secondary-light: #455A64;
+    --maypi-secondary-dark: #263238;
+    --maypi-accent: #808000;
+    --maypi-accent-light: #9E9E9E;
+    --maypi-neutral: #F2F2F2;
+    --maypi-white: #FFFFFF;
+    --maypi-shadow: rgba(46, 64, 83, 0.1);
+    --maypi-shadow-strong: rgba(46, 64, 83, 0.2);
+}
+
+// Sidebar/Navegación vertical estético
+fuse-vertical-navigation,
+.fuse-vertical-navigation,
+.navigation {
+    background: linear-gradient(180deg, var(--maypi-secondary) 0%, var(--maypi-secondary-dark) 100%) !important;
+    box-shadow: 2px 0 10px var(--maypi-shadow) !important;
+    border-right: 1px solid rgba(255, 193, 7, 0.1) !important;
+    
+    // Header del sidebar
+    .navigation-header {
+        background: linear-gradient(135deg, var(--maypi-primary) 0%, var(--maypi-primary-dark) 100%) !important;
+        color: var(--maypi-secondary) !important;
+        padding: 1.5rem 1rem !important;
+        border-bottom: 2px solid var(--maypi-primary-dark) !important;
+        
+        .logo {
+            filter: brightness(0) saturate(100%) invert(25%) sepia(15%) saturate(1000%) hue-rotate(180deg) brightness(95%) contrast(90%);
+        }
+    }
+    
+    // Items de navegación
+    .navigation-item,
+    .nav-item {
+        margin: 0.25rem 0.75rem !important;
+        border-radius: 0.75rem !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        position: relative !important;
+        overflow: hidden !important;
+        
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 193, 7, 0.1), transparent);
+            transition: left 0.5s;
+        }
+        
+        &:hover::before {
+            left: 100%;
+        }
+        
+        a, .navigation-item-wrapper {
+            color: rgba(255, 255, 255, 0.9) !important;
+            padding: 0.75rem 1rem !important;
+            border-radius: 0.75rem !important;
+            display: flex !important;
+            align-items: center !important;
+            text-decoration: none !important;
+            font-weight: 500 !important;
+            
+            .mat-icon {
+                color: rgba(255, 255, 255, 0.8) !important;
+                margin-right: 0.75rem !important;
+                font-size: 1.25rem !important;
+                transition: all 0.3s ease !important;
+            }
+        }
+        
+        &:hover {
+            background: rgba(255, 193, 7, 0.15) !important;
+            transform: translateX(4px) !important;
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2) !important;
+            
+            a, .navigation-item-wrapper {
+                color: var(--maypi-primary) !important;
+                
+                .mat-icon {
+                    color: var(--maypi-primary) !important;
+                    transform: scale(1.1) !important;
+                }
+            }
+        }
+        
+        &.active,
+        &.selected {
+            background: linear-gradient(135deg, var(--maypi-primary) 0%, var(--maypi-primary-light) 100%) !important;
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4) !important;
+            transform: translateX(6px) !important;
+            
+            a, .navigation-item-wrapper {
+                color: var(--maypi-secondary) !important;
+                font-weight: 600 !important;
+                
+                .mat-icon {
+                    color: var(--maypi-secondary) !important;
+                    transform: scale(1.15) !important;
+                }
+            }
+            
+            &::after {
+                content: '';
+                position: absolute;
+                right: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 4px;
+                height: 60%;
+                background: var(--maypi-secondary);
+                border-radius: 2px 0 0 2px;
+            }
+        }
+    }
+    
+    // Secciones/grupos de navegación
+    .navigation-group-title {
+        color: rgba(255, 193, 7, 0.8) !important;
+        font-size: 0.75rem !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        padding: 1rem 1.5rem 0.5rem !important;
+        margin-top: 1rem !important;
+    }
+}
+
+// Header/Toolbar estético
+.mat-toolbar,
+.toolbar,
+.header,
+fuse-fullscreen .fuse-mat-button-toggle,
+.fuse-mat-button-toggle {
+    background: linear-gradient(135deg, var(--maypi-primary) 0%, var(--maypi-primary-light) 100%) !important;
+    color: var(--maypi-secondary) !important;
+    box-shadow: 0 2px 8px var(--maypi-shadow) !important;
+    border-bottom: 1px solid rgba(46, 64, 83, 0.1) !important;
+    
+    .mat-icon {
+        color: var(--maypi-secondary) !important;
+    }
+    
+    .mat-button,
+    .mat-icon-button {
+        color: var(--maypi-secondary) !important;
+        
+        &:hover {
+            background: rgba(46, 64, 83, 0.1) !important;
+            border-radius: 0.5rem !important;
+        }
+    }
+}
+
+// Botones estéticos con colores Maypi
+.mat-flat-button,
+.mat-raised-button,
+.mat-fab,
+.mat-mini-fab {
+    border-radius: 0.75rem !important;
+    font-weight: 600 !important;
+    text-transform: none !important;
+    box-shadow: 0 2px 8px var(--maypi-shadow) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    
+    &.mat-primary {
+        background: linear-gradient(135deg, var(--maypi-primary) 0%, var(--maypi-primary-dark) 100%) !important;
+        color: var(--maypi-secondary) !important;
+        
+        &:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4) !important;
+        }
+    }
+    
+    &.mat-accent {
+        background: linear-gradient(135deg, var(--maypi-secondary) 0%, var(--maypi-secondary-light) 100%) !important;
+        color: var(--maypi-white) !important;
+        
+        &:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 4px 15px var(--maypi-shadow-strong) !important;
+        }
+    }
+}
+
+// Cards y contenedores estéticos
+.mat-card,
+.mat-expansion-panel {
+    border-radius: 1rem !important;
+    box-shadow: 0 4px 20px var(--maypi-shadow) !important;
+    border: 1px solid rgba(255, 193, 7, 0.1) !important;
+    transition: all 0.3s ease !important;
+    
+    &:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 8px 25px var(--maypi-shadow-strong) !important;
+    }
+}
+
+// Formularios estéticos
+.mat-form-field {
+    .mat-form-field-label {
+        color: var(--maypi-secondary) !important;
+        font-weight: 500 !important;
+    }
+    
+    &.mat-focused {
+        .mat-form-field-label {
+            color: var(--maypi-primary) !important;
+        }
+        
+        .mat-form-field-ripple {
+            background-color: var(--maypi-primary) !important;
+        }
+    }
+}
+
+// ===== LABELS DE FORMULARIO ELEGANTES Y SUTILES =====
+label {
+    background: var(--maypi-white) !important;
+    color: var(--maypi-secondary) !important;
+    padding: 0.4rem 0.8rem !important;
+    border-radius: 0.375rem !important;
+    font-weight: 600 !important;
+    font-size: 0.8rem !important;
+    border: 2px solid var(--maypi-primary) !important;
+    margin-bottom: 0.5rem !important;
+    display: inline-block !important;
+    position: relative !important;
+    box-shadow: 0 1px 3px rgba(255, 193, 7, 0.1) !important;
+    transition: all 0.3s ease !important;
+    
+    // Efecto sutil de hover
+    &:hover {
+        background: rgba(255, 193, 7, 0.05) !important;
+        border-color: var(--maypi-primary-dark) !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 2px 6px rgba(255, 193, 7, 0.15) !important;
+    }
+    
+    // Pequeño acento dorado
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, var(--maypi-primary) 0%, var(--maypi-primary-light) 100%);
+        border-radius: 0.375rem 0.375rem 0 0;
+    }
+    
+    // Para labels requeridos (con asterisco)
+    &[for*="required"]::after,
+    &:has(+ input[required])::after {
+        content: '*';
+        color: #dc2626;
+        margin-left: 0.25rem;
+        font-weight: 700;
+    }
+}
+
+// Labels específicos para campos de formulario
+.mat-form-field-label,
+.mat-input-element + label,
+.form-label,
+[class*="label"] {
+    background: transparent !important;
+    color: var(--maypi-secondary) !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 0 0.25rem 0 !important;
+    box-shadow: none !important;
+    
+    &::before {
+        display: none !important;
+    }
+    
+    // Estado focused
+    &.mat-focused,
+    &:focus {
+        color: var(--maypi-primary) !important;
+    }
+}
+
+// Inputs y selects
+.mat-input-element,
+.mat-select {
+    border-radius: 0.5rem !important;
+    border: 2px solid rgba(46, 64, 83, 0.2) !important;
+    transition: border-color 0.3s ease !important;
+    
+    &:focus {
+        border-color: var(--maypi-primary) !important;
+        box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.1) !important;
+    }
+}
+
+// Paginación estética
+.mat-paginator {
+    background: var(--maypi-neutral) !important;
+    border-radius: 0.75rem !important;
+    border: 1px solid rgba(255, 193, 7, 0.2) !important;
+    
+    .mat-paginator-page-size-select {
+        background: var(--maypi-primary) !important;
+        color: var(--maypi-secondary) !important;
+        border-radius: 0.5rem !important;
+    }
+    
+    .mat-icon-button {
+        background: var(--maypi-secondary) !important;
+        color: var(--maypi-white) !important;
+        border-radius: 50% !important;
+        margin: 0 0.25rem !important;
+        
+        &:hover {
+            background: var(--maypi-primary) !important;
+            color: var(--maypi-secondary) !important;
+        }
+        
+        &[disabled] {
+            background: rgba(46, 64, 83, 0.3) !important;
+            color: rgba(255, 255, 255, 0.5) !important;
+        }
+    }
+}
+
+// Tablas estéticas
+.mat-table {
+    border-radius: 1rem !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 20px var(--maypi-shadow) !important;
+    
+    .mat-header-row {
+        background: linear-gradient(135deg, var(--maypi-secondary) 0%, var(--maypi-secondary-light) 100%) !important;
+        
+        .mat-header-cell {
+            color: var(--maypi-white) !important;
+            font-weight: 600 !important;
+            border-bottom: 2px solid var(--maypi-primary) !important;
+        }
+    }
+    
+    .mat-row {
+        &:hover {
+            background: rgba(255, 193, 7, 0.05) !important;
+        }
+        
+        &:nth-child(even) {
+            background: rgba(242, 242, 242, 0.5) !important;
+        }
+    }
+}
+
+// Scrollbar personalizado
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--maypi-neutral);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--maypi-primary) 0%, var(--maypi-primary-dark) 100%);
+    border-radius: 4px;
+    
+    &:hover {
+        background: linear-gradient(135deg, var(--maypi-primary-dark) 0%, var(--maypi-accent) 100%);
+    }
+}

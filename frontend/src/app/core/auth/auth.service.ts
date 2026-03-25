@@ -1,0 +1,261 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { AuthUtils } from 'app/core/auth/auth.utils';
+import { UserService } from 'app/core/user/user.service';
+import { environment } from '../../../environments/environment';
+import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
+import { jwtDecode } from 'jwt-decode';
+
+interface DecodedToken {
+    sub: string;
+    id: number;
+    scopes: string[];
+    roles: string[];
+    exp: number;
+}
+@Injectable({ providedIn: 'root' })
+export class AuthService {
+    private _token: string = '';
+    private _authenticated: boolean = false;
+    private _httpClient = inject(HttpClient);
+    private _userService = inject(UserService);
+    // -----------------------------------------------------------------------------------------------------
+    // @ Accessors
+    // -----------------------------------------------------------------------------------------------------
+
+    /**
+     * Setter & getter for access token
+     */
+    get token(): string {
+        return this._token;
+    }
+    get decodedToken(): DecodedToken | null {
+        if (!this._token) return null;
+        return jwtDecode<DecodedToken>(this._token);
+    }
+
+    get scopes(): string[] {
+        return this.decodedToken?.scopes || [];
+    }
+    set accessToken(token: string) {
+        localStorage.setItem('accessToken', token);
+    }
+
+    get accessToken(): string {
+        return localStorage.getItem('accessToken') ?? '';
+    }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
+
+    /**
+     * Forgot password
+     *
+     * @param email
+     */
+    forgotPassword(email: string): Observable<any> {
+        return this._httpClient.post(
+            `${environment.baseUrl}/auth/forgot-password`,
+            email
+        ); // Usamos el baseUrl correctamente
+    }
+
+    /**
+     * Reset password
+     *
+     * @param password
+     */
+    resetPassword(password: string): Observable<any> {
+        return this._httpClient.post(
+            `${environment.baseUrl}/auth/reset-password`,
+            password
+        ); // Usamos el baseUrl correctamente
+    }
+
+    /**
+     * Sign in
+     *
+     * @param credentials
+     */
+    signIn(credentials: FormData): Observable<any> {
+        console.log('Datos de inicio de sesión:', credentials);
+
+        return this._httpClient
+            .post(`${environment.baseUrl}/auth/login`, credentials)
+            .pipe(
+                catchError((error) => {
+                    console.error('Error de inicio de sesión:', error);
+                    return throwError(error);
+                }),
+                switchMap((response: any) => {
+                    console.log('Respuesta del backend:', response);
+
+                    // Almacena el token si existe
+                    if (response.token) {
+                        // Aquí cambiamos accessToken por token
+                        this.accessToken = response.token; // Almacenar el token correctamente
+                        console.log(
+                            'Token recibido y almacenado:',
+                            this.accessToken
+                        );
+                    } else {
+                        console.warn('El backend no devolvió un token válido.');
+                    }
+
+                    // Corregir la URL eliminando la duplicación de api/v1
+                    return this._httpClient
+                        .get(`${environment.baseUrl}/users/${response.user.id}`)
+                        .pipe(
+                            switchMap((userData: any) => {
+                                this._authenticated = true;
+                                this._userService.user = userData.data;
+
+                                // Siempre actualizar el localStorage con los datos más recientes
+                                localStorage.removeItem('user'); // Eliminar datos antiguos
+                                localStorage.setItem(
+                                    'user',
+                                    JSON.stringify(userData.data)
+                                ); // Guardar datos nuevos
+
+                                console.log(
+                                    'Datos de usuario actualizados en localStorage:',
+                                    JSON.parse(JSON.stringify(userData.data))
+                                );
+
+                                return of({
+                                    ...response,
+                                    user: userData.data,
+                                });
+                            })
+                        );
+                })
+            );
+    }
+
+    /**
+     * Sign in using the access token
+     * Valida el token localmente sin hacer request al backend
+     */
+    signInUsingToken(): Observable<any> {
+        try {
+            const token = this.accessToken;
+            
+            // Si no hay token, retorna false
+            if (!token) {
+                return of(false);
+            }
+
+            // Intenta decodificar el token
+            const decodedToken = jwtDecode<any>(token);
+            
+            // Validar que el token tiene un ID
+            if (!decodedToken || !decodedToken.id) {
+                return of(false);
+            }
+
+            // Token válido - marcar como autenticado
+            this._authenticated = true;
+            console.log('Token decodificado correctamente:', decodedToken);
+
+            // Retornar true para indicar que está autenticado
+            return of(true);
+        } catch (error) {
+            // Error al decodificar - no está autenticado
+            console.error('Error decodificando token:', error);
+            this._authenticated = false;
+            return of(false);
+        }
+    }
+
+    /**
+     * Sign out
+     */
+    signOut(): Observable<any> {
+        // Limpiar el usuario del servicio UserService
+        this._userService.user = null;
+        // Remove the access token from the local storage
+        localStorage.removeItem('accessToken');
+
+        // Set the authenticated flag to false
+        this._authenticated = false;
+
+        // Return the observable
+        return of(true);
+    }
+
+    /**
+     * Sign up
+     *
+     * @param user
+     */
+    signUp(user: {
+        firstName: string;
+        lastName: string;
+        username: string;
+        email: string;
+        password: string;
+        role: string;
+    }): Observable<any> {
+        return this._httpClient.post(`${environment.baseUrl}/user`, user);
+    }
+
+    /**
+     * Unlock session
+     *
+     * @param credentials
+     */
+    unlockSession(credentials: {
+        email: string;
+        password: string;
+    }): Observable<any> {
+        return this._httpClient.post(
+            `${environment.baseUrl}/auth/unlock-session`,
+            credentials
+        ); // Usamos el baseUrl correctamente
+    }
+
+    /**
+     * Check the authentication status
+     */
+    check(): Observable<boolean> {
+        // Check if the user is logged in
+        if (this._authenticated) {
+            return of(true);
+        }
+
+        // Check the access token availability
+        if (!this.accessToken) {
+            return of(false);
+        }
+
+        // Check the access token expire date
+        if (AuthUtils.isTokenExpired(this.accessToken)) {
+            return of(false);
+        }
+
+        // If the access token exists, and it didn't expire, sign in using it
+        return this.signInUsingToken();
+    }
+
+    /**
+     * Get User Roles
+     */
+    getUserRoles(): string[] {
+        const token = this.accessToken;
+        if (!token) {
+            return [];
+        }
+
+        try {
+            // Decodifica el token
+            const decoded: any = jwtDecode(token);
+
+            // Devuelve los roles
+            return decoded.role || [];
+        } catch (error) {
+            console.error('Error al decodificar el token:', error);
+            return [];
+        }
+    }
+}

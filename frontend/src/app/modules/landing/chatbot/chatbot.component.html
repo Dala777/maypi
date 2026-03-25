@@ -1,0 +1,148 @@
+<div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+  <!-- Botón del chatbot con indicador de notificación -->
+  <button 
+    (click)="toggleChat()"
+    class="bg-[#FFC107] text-[#2E4053] rounded-full p-4 shadow-lg hover:bg-[#FFC107]/90 transition-all duration-300 flex items-center justify-center relative group"
+    aria-label="Abrir chat de ayuda"
+    title="Maya - Asistente Virtual de Maypi">
+    
+    <!-- Icono principal -->
+    <mat-icon *ngIf="!isOpen" class="text-2xl">chat</mat-icon>
+    <mat-icon *ngIf="isOpen" class="text-2xl">close</mat-icon>
+    
+    <!-- Indicador de disponibilidad -->
+    <div class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white">
+      <div class="w-full h-full bg-green-500 rounded-full animate-pulse"></div>
+    </div>
+    
+    <!-- Tooltip -->
+    <div class="absolute right-full mr-3 bg-[#2E4053] text-white px-3 py-2 rounded-lg text-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+      ¡Hola! Soy Nuna, tu asistente virtual
+      <div class="absolute top-1/2 -right-1 transform -translate-y-1/2 w-2 h-2 bg-[#2E4053] rotate-45"></div>
+    </div>
+  </button>
+  
+  <!-- Ventana del chat mejorada -->
+  <div 
+    *ngIf="isOpen"
+    [@slideIn]
+    class="bg-white rounded-lg shadow-xl w-80 sm:w-96 h-[500px] mt-4 flex flex-col overflow-hidden border border-gray-200">
+    
+    <!-- Encabezado del chat mejorado -->
+    <div class="bg-gradient-to-r from-[#2E4053] to-[#455A64] text-white p-4 flex items-center">
+      <div class="w-12 h-12 bg-[#FFC107] rounded-full flex items-center justify-center mr-3 shadow-lg">
+        <span class="text-[#2E4053] font-bold text-xl">M</span>
+      </div>
+      <div class="flex-1">
+        <h3 class="font-semibold text-lg">Nuna - Asistente Maypi</h3>
+        <div class="flex items-center text-xs text-green-300">
+          <div class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
+          En línea • Respuesta inteligente con IA
+        </div>
+      </div>
+      <button 
+        (click)="toggleChat()"
+        class="text-white/70 hover:text-white transition-colors p-1">
+        <mat-icon class="text-lg">minimize</mat-icon>
+      </button>
+    </div>
+    
+    <!-- Cuerpo del chat con scroll mejorado -->
+    <div class="flex-1 p-4 overflow-y-auto bg-gradient-to-b from-gray-50 to-white" 
+         style="scroll-behavior: smooth;">
+      <div *ngFor="let message of messages; let i = index" [@fadeIn] class="mb-4">
+        <!-- Mensaje del usuario -->
+        <div *ngIf="message.isUser" class="flex justify-end">
+          <div class="bg-gradient-to-r from-[#2E4053] to-[#455A64] text-white rounded-2xl rounded-br-md py-3 px-4 max-w-[85%] shadow-md">
+            <p class="text-sm leading-relaxed">{{ message.content }}</p>
+            <span class="text-xs text-white/70 block text-right mt-1">
+              {{ message.timestamp | date:'shortTime' }}
+            </span>
+          </div>
+        </div>
+        
+        <!-- Mensaje del bot con avatar -->
+        <div *ngIf="!message.isUser" class="flex justify-start items-start">
+          <div class="w-8 h-8 bg-[#FFC107] rounded-full flex items-center justify-center mr-2 mt-1 flex-shrink-0">
+            <span class="text-[#2E4053] font-bold text-sm">M</span>
+          </div>
+          <div class="bg-gradient-to-r from-[#FFC107]/10 to-[#FFC107]/5 text-[#2E4053] rounded-2xl rounded-bl-md py-3 px-4 max-w-[85%] shadow-sm border border-[#FFC107]/20">
+            <p class="text-sm leading-relaxed whitespace-pre-line">{{ message.content }}</p>
+            <span class="text-xs text-[#2E4053]/70 block mt-2">
+              {{ message.timestamp | date:'shortTime' }}
+            </span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Indicador de escritura mejorado -->
+      <div *ngIf="isTyping" [@fadeIn] class="flex justify-start items-start mb-4">
+        <div class="w-8 h-8 bg-[#FFC107] rounded-full flex items-center justify-center mr-2 flex-shrink-0">
+          <span class="text-[#2E4053] font-bold text-sm">M</span>
+        </div>
+        <div class="bg-gradient-to-r from-[#FFC107]/10 to-[#FFC107]/5 rounded-2xl rounded-bl-md py-3 px-4 border border-[#FFC107]/20">
+          <div class="flex items-center space-x-1">
+            <span class="text-xs text-[#2E4053]/70 mr-2">Nuna está escribiendo</span>
+            <div class="flex space-x-1">
+              <div class="w-2 h-2 bg-[#FFC107] rounded-full animate-bounce"></div>
+              <div class="w-2 h-2 bg-[#FFC107] rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+              <div class="w-2 h-2 bg-[#FFC107] rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Pie del chat mejorado -->
+    <div class="p-4 border-t border-gray-200 bg-white">
+      <!-- Sugerencias rápidas -->
+      <div class="mb-3 flex flex-wrap gap-2" *ngIf="messages.length <= 3">
+        <button 
+          (click)="userMessage = '¿Cómo reporto una desaparición?'; sendMessage()"
+          class="text-xs bg-[#FFC107]/20 text-[#2E4053] px-3 py-1 rounded-full hover:bg-[#FFC107]/30 transition-colors">
+          📋 Reportar caso
+        </button>
+        <button 
+          (click)="userMessage = '¿Cómo puedo buscar a alguien?'; sendMessage()"
+          class="text-xs bg-[#FFC107]/20 text-[#2E4053] px-3 py-1 rounded-full hover:bg-[#FFC107]/30 transition-colors">
+          🔍 Buscar persona
+        </button>
+        <button 
+          (click)="userMessage = 'Necesito ayuda urgente'; sendMessage()"
+          class="text-xs bg-red-100 text-red-700 px-3 py-1 rounded-full hover:bg-red-200 transition-colors">
+          🚨 Urgente
+        </button>
+      </div>
+      
+      <!-- Formulario de mensaje -->
+      <form (ngSubmit)="sendMessage()" class="flex items-end space-x-2">
+        <div class="flex-1">
+          <mat-form-field appearance="outline" class="w-full">
+            <input 
+              matInput
+              [(ngModel)]="userMessage"
+              name="userMessage"
+              placeholder="Escribe tu mensaje..."
+              autocomplete="off"
+              [disabled]="isTyping"
+              class="text-sm">
+          </mat-form-field>
+        </div>
+        <button 
+          type="submit"
+          [disabled]="!userMessage.trim() || isTyping"
+          class="bg-[#FFC107] text-[#2E4053] rounded-full p-3 hover:bg-[#FFC107]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md">
+          <mat-icon class="text-lg">send</mat-icon>
+        </button>
+      </form>
+      
+      <!-- Información adicional -->
+      <div class="mt-2 text-center">
+        <p class="text-xs text-gray-500">
+          🤖 Potenciado por IA • 
+          <span class="text-[#FFC107] font-medium">Emergencias: 800-123-456</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
