@@ -163,7 +163,10 @@ export class LandingHomeComponent implements OnInit {
             this._publicService
                 .storeContactSupport(newContactSupport)
                 .subscribe({
-                    next: (res: any) => window.location.reload(),
+                    next: (res: any) => {
+                        // Evitar recarga completa de página (no hace falta). Mantener estado local.
+                        this.contactSupportForm.success = true;
+                    },
                     error: (error) => console.log(error),
                 });
             */

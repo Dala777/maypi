@@ -2,6 +2,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, SecurityScopes
 from passlib.exc import InvalidTokenError
 from sqlalchemy.orm import Session
+from sqlalchemy.orm import selectinload
 from typing import List
 #MODELS
 from models.role import Role
@@ -46,27 +47,38 @@ async def get_current_user(
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         scopes = payload.get("scopes", [])
         roles = payload.get("roles", [])
-        user = db.query(User).filter(User.id == payload.get("id")).first()
+        user = db.query(User).options(
+            selectinload(User.roles),
+            selectinload(User.permissions)
+        ).filter(User.id == payload.get("id")).first()
         if user is None:
             raise credentials_exception
-    except InvalidTokenError:
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token expirado")
+    except Exception:
         raise credentials_exception
 
     if scopes == [] and roles == []:
         raise credentials_exception
-    add_permissions(scopes, roles, db)
-    check_permissions(scopes, security_scopes, "Su usuario no tiene los permisos necesarios para realizar esta accion")
 
-def add_permissions(scopes: List[str], roles: List[str], db: Session):
-    if not roles == []:
-        for role in roles:
-            current_role = db.query(Role).filter(Role.name == role).first()
-            if current_role is not None:
-                actions: list[str] = [permission.action for permission in current_role.permissions]
-                scopes = list(set(actions) | set(scopes))
+    all_permissions = add_permissions(scopes, roles, db)
+    check_permissions(all_permissions, security_scopes, "Su usuario no tiene los permisos necesarios para realizar esta accion")
 
-def check_permissions(permissions: List[str],  security_scopes: SecurityScopes, message: str):
-    if not permissions == []:
-        for scope in security_scopes.scopes:
-            if scope not in permissions:
-                raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=message)
+    return user
+
+def add_permissions(scopes: List[str], roles: List[int], db: Session) -> List[str]:
+    result_permissions = list(scopes or [])
+
+    for role in roles:
+        current_role = db.query(Role).filter(Role.id == role).first()
+        if current_role is not None:
+            actions: list[str] = [permission.action for permission in current_role.permissions]
+            result_permissions = list(set(result_permissions) | set(actions))
+
+    return result_permissions
+
+
+def check_permissions(permissions: List[str], security_scopes: SecurityScopes, message: str):
+    for scope in security_scopes.scopes:
+        if scope not in permissions:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=message)

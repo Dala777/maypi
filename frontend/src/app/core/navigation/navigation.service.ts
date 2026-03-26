@@ -21,16 +21,58 @@ export class NavigationService {
      * Get all navigation data filtered by user roles
      */
     get(): Observable<Navigation> {
-        // Decode token and extract roles
-        const token = localStorage.getItem('token');
+        // Decode token and extract roles (support accessToken + token keys)
+        const token = localStorage.getItem('accessToken') ?? localStorage.getItem('token');
         let roles: number[] = [];
 
         if (token) {
             try {
                 const decoded: any = jwtDecode(token);
-                //console.log('Decoded JWT token:', decoded);  // Log de token decodificado
-                // Asegúrate de que el role sea un número y existe
-                roles = decoded.role ? Array.isArray(decoded.role) ? decoded.role : [Number(decoded.role)] : [];
+
+                const normalizeRole = (roleValue: any): number | null => {
+                    if (roleValue === null || roleValue === undefined) {
+                        return null;
+                    }
+
+                    const roleNameMap: Record<string, number> = {
+                        admin: 1,
+                        cliente: 2,
+                        visualizador: 3,
+                        user: 2,
+                        client: 2,
+                        viewer: 3,
+                    };
+
+                    if (typeof roleValue === 'number') {
+                        return roleValue;
+                    }
+
+                    if (typeof roleValue === 'string') {
+                        const normalized = roleValue.toLowerCase();
+                        if (roleNameMap[normalized]) {
+                            return roleNameMap[normalized];
+                        }
+
+                        const parsed = Number(roleValue);
+                        return Number.isNaN(parsed) ? null : parsed;
+                    }
+
+                    return null;
+                };
+
+                const rawRoles = decoded.roles ?? decoded.role;
+
+                if (Array.isArray(rawRoles)) {
+                    roles = rawRoles
+                        .map((r: any) => normalizeRole(r))
+                        .filter((r: number | null): r is number => r !== null);
+                } else {
+                    const normalized = normalizeRole(rawRoles);
+                    if (normalized !== null) {
+                        roles = [normalized];
+                    }
+                }
+
                 //console.log('Roles extracted from token:', roles);  // Log de los roles extraídos
             } catch (error) {
                 console.error('Error decoding token:', error);
@@ -39,14 +81,15 @@ export class NavigationService {
             console.log('No token found in localStorage');
         }
 
-        // Fetch navigation from the API
-        return this._httpClient.get<Navigation>('api/common/navigation').pipe(
+        // Fetch navigation from the API (absolute path to avoid relative path issues)
+        return this._httpClient.get<Navigation>('/api/common/navigation').pipe(
             tap((navigation) => {
-                //console.log('Raw navigation received:', navigation);  // Log de la navegación cruda recibida
+                console.log('Raw navigation received:', navigation);  // Log de la navegación cruda recibida
+                console.log('Extracted role IDs from token:', roles);
 
                 // Filter the navigation based on roles (assuming roles are numeric and correspond to some logic)
                 const filteredNavigation = this.filterNavigationByRole(navigation, roles);
-                //console.log('Filtered navigation:', filteredNavigation);  // Log de la navegación filtrada
+                console.log('Filtered navigation:', filteredNavigation);  // Log de la navegación filtrada
 
                 // Send filtered navigation to the ReplaySubject
                 this._navigation.next(filteredNavigation);
@@ -58,11 +101,37 @@ export class NavigationService {
     private filterNavigationByRole(navigation: Navigation, roles: number[]): Navigation {
         //console.log('Filtering navigation with roles:', roles);  // Log de los roles para el filtrado
         return {
-            compact: navigation.compact.filter(item => this.isAuthorizedForRole(item, roles)),
-            default: navigation.default.filter(item => this.isAuthorizedForRole(item, roles)),
-            futuristic: navigation.futuristic.filter(item => this.isAuthorizedForRole(item, roles)),
-            horizontal: navigation.horizontal.filter(item => this.isAuthorizedForRole(item, roles)),
+            compact: this.filterNavigationItems(navigation.compact, roles),
+            default: this.filterNavigationItems(navigation.default, roles),
+            futuristic: this.filterNavigationItems(navigation.futuristic, roles),
+            horizontal: this.filterNavigationItems(navigation.horizontal, roles),
         };
+    }
+
+    private filterNavigationItems(items: FuseNavigationItem[], roles: number[]): FuseNavigationItem[] {
+        return items
+            .map(item => this.filterNavigationItem(item, roles))
+            .filter((item): item is FuseNavigationItem => item !== null);
+    }
+
+    private filterNavigationItem(item: FuseNavigationItem, roles: number[]): FuseNavigationItem | null {
+        const hasAccess = this.isAuthorizedForRole(item, roles);
+
+        let children: FuseNavigationItem[] | undefined;
+
+        if (item.children && item.children.length > 0) {
+            children = this.filterNavigationItems(item.children, roles);
+        }
+
+        if (hasAccess || (children && children.length > 0)) {
+            const filteredItem: FuseNavigationItem = {
+                ...item,
+                children,
+            };
+            return filteredItem;
+        }
+
+        return null;
     }
 
     // Method to check if an item is authorized for the given roles

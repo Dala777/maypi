@@ -29,6 +29,8 @@ from datetime import date
 import os
 import base64
 import mimetypes
+import uuid
+
 router = APIRouter()
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
@@ -98,6 +100,7 @@ def encode_image(path: str) -> str:
     mime_type, _ = mimetypes.guess_type(path)
     with open(path, "rb") as f:
         return f"data:{mime_type};base64," + base64.b64encode(f.read()).decode("utf-8")
+
 @router.get(
     '/missing',
     status_code=status.HTTP_200_OK,
@@ -378,29 +381,36 @@ def storeContactSupport(
             detail=f"Error al crear el contacto del soporte {e}"
         )
 
+#code auto-generado, avatar opcional, second_surname opcional
 @router.post('/register-user', status_code=status.HTTP_201_CREATED)
 def storeUsers(
-        code: str = Form(...),
         name: str = Form(...),
         last_name: str = Form(...),
-        second_surname: str = Form(...),
+        second_surname: str = Form(""),           #opcional, por defecto vacío
         email: EmailStr = Form(...),
         password: str = Form(...),
         phone: int = Form(...),
         token_firebase: str = Form(None),
-        avatar: UploadFile = File(...),
+        avatar: UploadFile = File(None),           #opcional
         db: Session = Depends(get_db),
 ):
     saved_avatar_path = None
 
     try:
-        relative_avatar_path = save_image_file(avatar, name, last_name, code, "avatars")
-        saved_avatar_path = os.path.join(relative_avatar_path)
+        #generar código único automáticamente
+        auto_code = "CODPER" + uuid.uuid4().hex[:6].upper()
+
+        #avatar es opcional
+        if avatar and avatar.filename:
+            relative_avatar_path = save_image_file(avatar, name, last_name, auto_code, "avatars")
+            saved_avatar_path = os.path.join(relative_avatar_path)
+        else:
+            relative_avatar_path = None
 
         hashed_password = bcrypt_context.hash(password)
 
         new_user = User(
-            code=code,
+            code=auto_code,
             name=name,
             last_name=last_name,
             second_surname=second_surname,
@@ -415,13 +425,13 @@ def storeUsers(
         db.add(new_user)
         db.commit()
         db.refresh(new_user)
-        client_role =  UserHasRoles(
-            role_id=2,
-            user_id=new_user.id
-        )
+
+        #asignar rol 2 (cliente) automáticamente
+        client_role = UserHasRoles(role_id=2, user_id=new_user.id)
         db.add(client_role)
         db.commit()
         db.refresh(client_role)
+
         return {
             "message": "Se ha registrado el usuario correctamente",
             "data": UserResponse.model_validate(new_user)

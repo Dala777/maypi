@@ -93,42 +93,32 @@ export class AuthService {
 
                     // Almacena el token si existe
                     if (response.token) {
-                        // Aquí cambiamos accessToken por token
-                        this.accessToken = response.token; // Almacenar el token correctamente
-                        console.log(
-                            'Token recibido y almacenado:',
-                            this.accessToken
-                        );
+                        // aquí guardamos tanto accessToken como token para compatibilidad
+                        this.accessToken = response.token;
+                        localStorage.setItem('token', response.token);
+                        console.log('Token recibido y almacenado (accessToken y token):', this.accessToken);
                     } else {
                         console.warn('El backend no devolvió un token válido.');
                     }
 
-                    // Corregir la URL eliminando la duplicación de api/v1
-                    return this._httpClient
-                        .get(`${environment.baseUrl}/users/${response.user.id}`)
-                        .pipe(
-                            switchMap((userData: any) => {
-                                this._authenticated = true;
-                                this._userService.user = userData.data;
+                    // Usar la información de usuario que ya viene en la respuesta de login
+                    this._authenticated = true;
+                    const userInfo = response.user;
+                    this._userService.user = userInfo;
 
-                                // Siempre actualizar el localStorage con los datos más recientes
-                                localStorage.removeItem('user'); // Eliminar datos antiguos
-                                localStorage.setItem(
-                                    'user',
-                                    JSON.stringify(userData.data)
-                                ); // Guardar datos nuevos
+                    // Siempre actualizar el localStorage con los datos más recientes
+                    localStorage.removeItem('user');
+                    localStorage.setItem('user', JSON.stringify(userInfo));
 
-                                console.log(
-                                    'Datos de usuario actualizados en localStorage:',
-                                    JSON.parse(JSON.stringify(userData.data))
-                                );
+                    console.log(
+                        'Datos de usuario actualizados en localStorage:',
+                        JSON.parse(JSON.stringify(userInfo))
+                    );
 
-                                return of({
-                                    ...response,
-                                    user: userData.data,
-                                });
-                            })
-                        );
+                    return of({
+                        ...response,
+                        user: userInfo,
+                    });
                 })
             );
     }
@@ -174,8 +164,9 @@ export class AuthService {
     signOut(): Observable<any> {
         // Limpiar el usuario del servicio UserService
         this._userService.user = null;
-        // Remove the access token from the local storage
+        // Remove tokens from local storage
         localStorage.removeItem('accessToken');
+        localStorage.removeItem('token');
 
         // Set the authenticated flag to false
         this._authenticated = false;
@@ -252,7 +243,15 @@ export class AuthService {
             const decoded: any = jwtDecode(token);
 
             // Devuelve los roles
-            return decoded.role || [];
+            if (Array.isArray(decoded.roles)) {
+                return decoded.roles;
+            }
+
+            if (decoded.role) {
+                return Array.isArray(decoded.role) ? decoded.role : [decoded.role];
+            }
+
+            return [];
         } catch (error) {
             console.error('Error al decodificar el token:', error);
             return [];

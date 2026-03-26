@@ -5,6 +5,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from passlib.context import CryptContext
 from datetime import timedelta, datetime
 from sqlalchemy.orm import Session
+from sqlalchemy.orm import selectinload
 from models.user import User
 from schemas.auth import Token
 from schemas.user import UserResponse
@@ -23,7 +24,10 @@ bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 @router.post("/auth/login", status_code=status.HTTP_200_OK, response_model=Token)
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)) -> Token:
-    user = db.query(User).filter(User.phone == form_data.username).first()
+    user = db.query(User).options(
+        selectinload(User.roles),
+        selectinload(User.permissions)
+    ).filter(User.phone == form_data.username).first()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -41,7 +45,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 
         for role in user.roles:
             if role.name not in roles:
-                roles.append(role.name)
+                roles.append(role.id)
             #ROLE PERMISSIONS
             for permission in role.permissions:
                 if permission.action not in permissions:

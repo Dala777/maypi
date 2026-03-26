@@ -1,5 +1,6 @@
 import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from 'app/core/auth/auth.service';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { catchError, Observable, throwError } from 'rxjs';
@@ -41,11 +42,15 @@ export const authInterceptor = (req: HttpRequest<unknown>, next: HttpHandlerFn):
                 // Sign out
                 authService.signOut();
 
-                // Reload the app inceptor que es
-                location.reload();
+                // Navigate to login page and avoid hard reload
+                const router = inject(Router);
+                router.navigate(['/sign-in'], { replaceUrl: true });
+
+                // Optionally return throwError to keep call flow
+                return throwError(() => error);
             }
 
-            return throwError(error);
+            return throwError(() => error);
         }),
     );
 };

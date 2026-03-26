@@ -132,9 +132,30 @@ def store(
 def show(
         id: int,
         db: Session = Depends(get_db),
-        user_permission: User = Security(get_current_user, scopes=["show user"])
+        current_user: User = Security(get_current_user, scopes=[])
 ):
     try:
+        if current_user is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Usuario no autenticado"
+            )
+
+        if current_user.id != id:
+            # Para ver otros usuarios, se requiere permiso explícito
+            user_permissions = {p.action for p in current_user.permissions}
+            role_permissions = {
+                p.action
+                for role in current_user.roles
+                for p in role.permissions
+            }
+            all_permissions = user_permissions | role_permissions
+            if "show user" not in all_permissions:
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="No tiene permiso para ver este usuario"
+                )
+
         user = db.query(User).filter(User.id == id).first()
         if user is None:
             raise HTTPException(

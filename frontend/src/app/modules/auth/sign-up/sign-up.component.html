@@ -60,99 +60,33 @@
                 novalidate
             >
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Code -->
-                    <mat-form-field class="w-full" appearance="outline">
-                        <mat-label>Codigo</mat-label>
-                        <input id="code" matInput [formControlName]="'code'" />
-                        <mat-icon matPrefix class="mr-2 text-[#2E4053]"
-                            >person</mat-icon
-                        >
-                        <mat-error
-                            *ngIf="
-                                Form.code.invalid &&
-                                (Form.code.dirty || Form.code.touched)
-                            "
-                        >
-                            El codigo es requerido
-                        </mat-error>
-                    </mat-form-field>
-                    <!-- Nombres -->
+
+                    <!-- Nombre -->
                     <mat-form-field class="w-full" appearance="outline">
                         <mat-label>Nombre</mat-label>
                         <input id="name" matInput [formControlName]="'name'" />
-                        <mat-icon matPrefix class="mr-2 text-[#2E4053]"
-                            >person</mat-icon
-                        >
-                        <mat-error
-                            *ngIf="
-                                Form.name.invalid &&
-                                (Form.name.dirty || Form.name.touched)
-                            "
-                        >
-                            El nombre son requeridos
+                        <mat-icon matPrefix class="mr-2 text-[#2E4053]">person</mat-icon>
+                        <mat-error *ngIf="Form.name.invalid && (Form.name.dirty || Form.name.touched)">
+                            El nombre es requerido
                         </mat-error>
                     </mat-form-field>
 
-                    <!-- Apellidos -->
+                    <!-- Apellido -->
                     <mat-form-field class="w-full" appearance="outline">
                         <mat-label>Apellido</mat-label>
-                        <input
-                            id="last_name"
-                            matInput
-                            [formControlName]="'last_name'"
-                        />
-                        <mat-icon matPrefix class="mr-2 text-[#2E4053]"
-                            >person</mat-icon
-                        >
-                        <mat-error
-                            *ngIf="
-                                Form.last_name.invalid &&
-                                (Form.last_name.dirty || Form.last_name.touched)
-                            "
-                        >
-                            Los apellidos son requeridos
-                        </mat-error>
-                    </mat-form-field>
-
-                    <!-- Usuario -->
-                    <mat-form-field class="w-full" appearance="outline">
-                        <mat-label>Segundo Apellido</mat-label>
-                        <input
-                            id="second_surname"
-                            matInput
-                            [formControlName]="'second_surname'"
-                        />
-                        <mat-icon matPrefix class="mr-2 text-[#2E4053]"
-                            >account_circle</mat-icon
-                        >
-                        <mat-error
-                            *ngIf="
-                                Form.second_surname.invalid &&
-                                (Form.second_surname.dirty ||
-                                    Form.second_surname.touched)
-                            "
-                        >
-                            El nombre de usuario es requerido
+                        <input id="last_name" matInput [formControlName]="'last_name'" />
+                        <mat-icon matPrefix class="mr-2 text-[#2E4053]">person</mat-icon>
+                        <mat-error *ngIf="Form.last_name.invalid && (Form.last_name.dirty || Form.last_name.touched)">
+                            El apellido es requerido
                         </mat-error>
                     </mat-form-field>
 
                     <!-- Teléfono -->
                     <mat-form-field class="w-full" appearance="outline">
                         <mat-label>Teléfono Celular</mat-label>
-                        <input
-                            id="phone"
-                            matInput
-                            [formControlName]="'phone'"
-                        />
-                        <mat-icon matPrefix class="mr-2 text-[#2E4053]"
-                            >phone</mat-icon
-                        >
-                        <mat-error
-                            *ngIf="
-                                Form.phone.invalid &&
-                                (Form.phone.dirty || Form.phone.touched)
-                            "
-                        >
+                        <input id="phone" matInput [formControlName]="'phone'" />
+                        <mat-icon matPrefix class="mr-2 text-[#2E4053]">phone</mat-icon>
+                        <mat-error *ngIf="Form.phone.invalid && (Form.phone.dirty || Form.phone.touched)">
                             El teléfono es requerido
                         </mat-error>
                     </mat-form-field>
@@ -160,34 +94,15 @@
                     <!-- Correo -->
                     <mat-form-field class="w-full" appearance="outline">
                         <mat-label>Correo Electrónico</mat-label>
-                        <input
-                            id="email"
-                            matInput
-                            [formControlName]="'email'"
-                        />
-                        <mat-icon matPrefix class="mr-2 text-[#2E4053]"
-                            >email</mat-icon
-                        >
-                        <mat-error
-                            *ngIf="
-                                Form.email.invalid &&
-                                (Form.email.dirty || Form.email.touched)
-                            "
-                        >
-                            El correo es requerido
-                        </mat-error>
-                        <mat-error
-                            *ngIf="
-                                Form.email.invalid &&
-                                (Form.email.dirty || Form.email.touched)
-                            "
-                        >
-                            Por favor ingrese un correo válido
+                        <input id="email" matInput [formControlName]="'email'" />
+                        <mat-icon matPrefix class="mr-2 text-[#2E4053]">email</mat-icon>
+                        <mat-error *ngIf="Form.email.invalid && (Form.email.dirty || Form.email.touched)">
+                            Ingrese un correo válido
                         </mat-error>
                     </mat-form-field>
 
                     <!-- Contraseña -->
-                    <mat-form-field class="w-full" appearance="outline">
+                    <mat-form-field class="w-full md:col-span-2" appearance="outline">
                         <mat-label>Contraseña</mat-label>
                         <input
                             id="password"
@@ -196,53 +111,21 @@
                             [formControlName]="'password'"
                             #passwordField
                         />
-                        <mat-icon matPrefix class="mr-2 text-[#2E4053]"
-                            >lock</mat-icon
-                        >
+                        <mat-icon matPrefix class="mr-2 text-[#2E4053]">lock</mat-icon>
                         <button
                             mat-icon-button
                             type="button"
-                            (click)="
-                                passwordField.type === 'password'
-                                    ? (passwordField.type = 'text')
-                                    : (passwordField.type = 'password')
-                            "
+                            (click)="passwordField.type === 'password' ? (passwordField.type = 'text') : (passwordField.type = 'password')"
                             matSuffix
                         >
-                            <mat-icon
-                                class="icon-size-5"
-                                *ngIf="passwordField.type === 'password'"
-                                [svgIcon]="'heroicons_solid:eye'"
-                            ></mat-icon>
-                            <mat-icon
-                                class="icon-size-5"
-                                *ngIf="passwordField.type === 'text'"
-                                [svgIcon]="'heroicons_solid:eye-slash'"
-                            ></mat-icon>
+                            <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'password'" [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                            <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'text'" [svgIcon]="'heroicons_solid:eye-slash'"></mat-icon>
                         </button>
-                        <mat-error
-                            *ngIf="
-                                Form.password.invalid &&
-                                (Form.password.dirty || Form.password.touched)
-                            "
-                        >
+                        <mat-error *ngIf="Form.password.invalid && (Form.password.dirty || Form.password.touched)">
                             La contraseña es requerida
                         </mat-error>
                     </mat-form-field>
 
-                    <!-- Imagen -->
-                    <div class="flex-auto m-2">
-                        <label
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                            >Avatar del usuario</label
-                        >
-                        <input
-                            type="file"
-                            class="w-full px-3 py-2 border rounded-md dark:bg-gray-800 dark:text-white dark:border-gray-700"
-                            (change)="onFileChange($event, 'avatar')"
-                            accept="image/jpeg,image/png,image/gif"
-                        />
-                    </div>
                 </div>
 
                 <!-- Botón de envío -->
@@ -253,10 +136,7 @@
                     [disabled]="signUpForm.formGroup.disabled"
                     (click)="formSubmit()"
                 >
-                    <span
-                        *ngIf="!signUpForm.formGroup.disabled"
-                        class="flex items-center justify-center"
-                    >
+                    <span *ngIf="!signUpForm.formGroup.disabled" class="flex items-center justify-center">
                         <mat-icon class="mr-2">person_add</mat-icon>
                         Crear nuevo Usuario
                     </span>
