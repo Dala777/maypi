@@ -1,0 +1,465 @@
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+        --primary: #2E4053;
+        --accent: #FFC107;
+        --low: #27ae60;
+        --medium: #e67e22;
+        --high: #c0392b;
+        --bg: #f4f6f8;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: transparent;
+        color: var(--primary);
+        padding: 0;
+    }
+
+    #quiz-container {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 25px;
+        border-bottom: 2px solid var(--bg);
+        padding-bottom: 15px;
+    }
+
+    .header h1 {
+        font-size: 1.8rem;
+        margin-bottom: 8px;
+        color: var(--primary);
+    }
+
+    .header h1 em {
+        color: var(--accent);
+        font-style: normal;
+    }
+
+    .disclaimer {
+        font-size: 0.85rem;
+        color: #666;
+        font-style: italic;
+        margin-top: 8px;
+    }
+
+    .progress-bar {
+        height: 6px;
+        background-color: var(--bg);
+        border-radius: 10px;
+        margin-bottom: 25px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--accent), #ffb300);
+        width: 0%;
+        transition: width 0.4s ease;
+    }
+
+    .step {
+        display: none;
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    .step.active {
+        display: block;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .question-text {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: var(--primary);
+    }
+
+    .question-help {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 20px;
+        padding: 10px;
+        background: #f0f0f0;
+        border-left: 3px solid var(--accent);
+        border-radius: 4px;
+    }
+
+    .answers {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    button.answer-btn {
+        background: #f9f9f9;
+        border: 2px solid #ddd;
+        padding: 14px 16px;
+        border-radius: 10px;
+        text-align: left;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 1rem;
+        color: var(--primary);
+        font-weight: 500;
+    }
+
+    button.answer-btn:hover {
+        background-color: #fffbf0;
+        border-color: var(--accent);
+        box-shadow: 0 2px 12px rgba(255, 193, 7, 0.2);
+        transform: translateX(2px);
+    }
+
+    button.answer-btn:active {
+        transform: scale(0.98);
+    }
+
+    #result-container {
+        display: none;
+        text-align: center;
+    }
+
+    .traffic-light {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        margin: 20px auto;
+        border: 4px solid #ddd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+    }
+
+    .interpretation {
+        font-weight: bold;
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+        color: var(--primary);
+    }
+
+    .score-display {
+        font-size: 1rem;
+        color: #666;
+        margin-bottom: 20px;
+    }
+
+    .score-display strong {
+        color: var(--primary);
+        font-weight: 800;
+    }
+
+    .actions {
+        text-align: left;
+        background: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 4px solid #ddd;
+        margin-bottom: 20px;
+    }
+
+    .actions h3 {
+        margin-bottom: 12px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #666;
+    }
+
+    .actions ul {
+        list-style: none;
+    }
+
+    .actions li {
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+        color: var(--primary);
+    }
+
+    .actions li::before {
+        content: '→ ';
+        font-weight: bold;
+        color: var(--primary);
+    }
+
+    .restart-btn {
+        display: block;
+        width: 100%;
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+
+    .restart-btn:hover {
+        background: #1a2a38;
+        box-shadow: 0 4px 12px rgba(46, 64, 83, 0.3);
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 480px) {
+        #quiz-container {
+            padding: 20px;
+        }
+
+        .header h1 {
+            font-size: 1.3rem;
+        }
+
+        .question-text {
+            font-size: 1rem;
+        }
+    }
+</style>
+
+<div id="quiz-container">
+    <div class="header">
+        <h1>Evaluación de Riesgo de Desaparición</h1>
+        <div class="disclaimer">Herramienta orientativa. No reemplaza la denuncia formal ante autoridades.</div>
+    </div>
+    
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+    <div id="questions-section"></div>
+
+    <div id="result-container">
+        <div class="traffic-light" id="result-emoji"></div>
+        <div class="interpretation" id="result-text"></div>
+        <div class="score-display">Puntuación total: <strong id="total-score"></strong> / 24</div>
+        <div class="actions">
+            <h3>Acciones recomendadas:</h3>
+            <ul id="action-list"></ul>
+        </div>
+        <button class="restart-btn" onclick="window.restartQuiz()">↺ Reiniciar Evaluación</button>
+    </div>
+</div>
+
+<script>
+// Crear un contexto seguro para el quiz
+(function() {
+    // Esperar a que el contenedor exista
+    function waitForContainer() {
+        const container = document.getElementById('quiz-container');
+        if (!container) {
+            setTimeout(waitForContainer, 50);
+            return;
+        }
+        initializeQuiz();
+    }
+
+    function initializeQuiz() {
+        const state = {
+            currentStep: 0,
+            totalScore: 0,
+            questionsData: [
+                { q: "¿La persona ha presentado cambios recientes en su comportamiento habitual?", help: "Ej.: ánimo, conducta, intereses, forma de relacionarse" },
+                { q: "¿La persona se ha aislado de familiares, amistades o actividades habituales?" },
+                { q: "¿Ha reducido significativamente la comunicación o el contacto con personas cercanas?" },
+                { q: "¿Mantiene contacto frecuente con personas desconocidas o poco identificadas?" },
+                { q: "¿Ha cambiado su forma de usar el celular o redes sociales?", help: "Uso oculto, excesivo o secreto" },
+                { q: "¿Ha recibido mensajes, regalos, dinero o beneficios sin explicación clara?" },
+                { q: "¿Existen situaciones de violencia, conflicto o tensión significativa en su entorno?" },
+                { q: "¿La persona se encuentra en una situación de vulnerabilidad?", help: "Emocional, económica o social" },
+                { q: "¿Cuenta con una red de apoyo cercana?", help: "Familia, amigos, referentes de confianza" },
+                { q: "¿Ha expresado ideas de querer irse, escapar o desaparecer?" },
+                { q: "¿Ha cambiado su rutina sin informar o justificar adecuadamente?" },
+                { q: "¿Han ocurrido eventos recientes que aumenten el riesgo?", help: "Ej.: amenazas, propuestas de desconocidos" }
+            ],
+            answers: [
+                { text: "No", score: 0 },
+                { text: "A veces / Leve / Dudoso", score: 1 },
+                { text: "Sí / Frecuente / Marcado / Grave", score: 2 }
+            ]
+        };
+
+        function buildQuiz() {
+            const container = document.getElementById('questions-section');
+            if (!container) return;
+            container.innerHTML = '';
+            
+            state.questionsData.forEach((data, index) => {
+                const stepDiv = document.createElement('div');
+                stepDiv.className = `step ${index === 0 ? 'active' : ''}`;
+                stepDiv.id = `step-${index}`;
+
+                const qText = document.createElement('div');
+                qText.className = 'question-text';
+                qText.innerText = `${index + 1}. ${data.q}`;
+                stepDiv.appendChild(qText);
+
+                if (data.help) {
+                    const qHelp = document.createElement('div');
+                    qHelp.className = 'question-help';
+                    qHelp.innerText = data.help;
+                    stepDiv.appendChild(qHelp);
+                }
+
+                const answersDiv = document.createElement('div');
+                answersDiv.className = 'answers';
+
+                state.answers.forEach(ans => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'answer-btn';
+                    btn.innerText = ans.text;
+                    btn.onclick = () => handleAnswer(ans.score);
+                    answersDiv.appendChild(btn);
+                });
+
+                stepDiv.appendChild(answersDiv);
+                container.appendChild(stepDiv);
+            });
+            updateProgress();
+        }
+
+        function handleAnswer(score) {
+            state.totalScore += score;
+            const current = document.getElementById(`step-${state.currentStep}`);
+            if (current) current.classList.remove('active');
+            state.currentStep++;
+
+            if (state.currentStep < state.questionsData.length) {
+                const next = document.getElementById(`step-${state.currentStep}`);
+                if (next) next.classList.add('active');
+                updateProgress();
+            } else {
+                showResults();
+            }
+        }
+
+        function updateProgress() {
+            const fill = document.getElementById('progress');
+            if (fill) {
+                const percent = (state.currentStep / state.questionsData.length) * 100;
+                fill.style.width = `${percent}%`;
+            }
+        }
+
+        function showResults() {
+            const qSection = document.getElementById('questions-section');
+            const progressBar = document.querySelector('.progress-bar');
+            const resultContainer = document.getElementById('result-container');
+
+            if (qSection) qSection.style.display = 'none';
+            if (progressBar) progressBar.style.display = 'none';
+            if (resultContainer) resultContainer.style.display = 'block';
+
+            const emojiEl = document.getElementById('result-emoji');
+            const text = document.getElementById('result-text');
+            const scoreSpan = document.getElementById('total-score');
+            const actionList = document.getElementById('action-list');
+            
+            if (scoreSpan) scoreSpan.innerText = state.totalScore;
+            if (actionList) actionList.innerHTML = '';
+
+            let interpretation = '';
+            let color = '';
+            let emoji = '';
+            let acts = [];
+
+            if (state.totalScore <= 8) {
+                interpretation = "Riesgo Bajo";
+                color = '#27ae60';
+                emoji = '🟢';
+                acts = [
+                    "Mantener comunicación activa con la persona",
+                    "Fortalecer los vínculos afectivos y sociales",
+                    "Continuar con observación preventiva"
+                ];
+            } else if (state.totalScore <= 16) {
+                interpretation = "Riesgo Moderado";
+                color = '#e67e22';
+                emoji = '🟡';
+                acts = [
+                    "Hablar con la persona sin juzgar ni presionar",
+                    "Incrementar el acompañamiento diario",
+                    "Activar la red de apoyo familiar y profesional",
+                    "Considerar orientación psicológica profesional"
+                ];
+            } else {
+                interpretation = "Riesgo Alto";
+                color = '#c0392b';
+                emoji = '🔴';
+                acts = [
+                    "SITUACIÓN CRÍTICA — Actuar de inmediato",
+                    "Contactar a las autoridades competentes",
+                    "No dejar a la persona sin supervisión",
+                    "Registrar y reportar ante FELCC o servicios especializados"
+                ];
+            }
+
+            if (emojiEl) {
+                emojiEl.style.color = color;
+                emojiEl.innerText = emoji;
+            }
+            
+            if (text) {
+                text.innerText = interpretation;
+                text.style.color = color;
+            }
+
+            const actionsDiv = document.querySelector('.actions');
+            if (actionsDiv) {
+                actionsDiv.style.borderLeftColor = color;
+            }
+
+            if (actionList) {
+                acts.forEach(act => {
+                    const li = document.createElement('li');
+                    li.innerText = act;
+                    actionList.appendChild(li);
+                });
+            }
+        }
+
+        function restartQuiz() {
+            state.totalScore = 0;
+            state.currentStep = 0;
+            const qSection = document.getElementById('questions-section');
+            const progressBar = document.querySelector('.progress-bar');
+            const resultContainer = document.getElementById('result-container');
+
+            if (qSection) qSection.style.display = 'block';
+            if (progressBar) progressBar.style.display = 'block';
+            if (resultContainer) resultContainer.style.display = 'none';
+            
+            buildQuiz();
+        }
+
+        // Hacer funciones globales accesibles
+        window.handleAnswer = handleAnswer;
+        window.restartQuiz = restartQuiz;
+
+        // Iniciar el quiz
+        buildQuiz();
+    }
+
+    // Esperar a que el contenedor esté disponible
+    waitForContainer();
+})();
+</script>

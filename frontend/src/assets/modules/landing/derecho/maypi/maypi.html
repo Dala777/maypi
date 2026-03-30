@@ -1,0 +1,608 @@
+<div id="MAYPI_LEGAL_NET" style="font-family:'Segoe UI',Arial,sans-serif; max-width:1280px; margin:auto; background:linear-gradient(180deg,#f4f8ff 0%,#eef4ff 100%); color:#0f172a; border-radius:28px; box-shadow:0 22px 60px rgba(15,23,42,.14); overflow:hidden; border:1px solid rgba(37,99,235,.08); position:relative;">
+  
+  <!-- FRANJAS SUPERIORES -->
+  <div style="height:10px; display:flex;">
+    <div style="flex:1; background:linear-gradient(90deg,#ff7a00,#ff9f1c);"></div>
+    <div style="flex:1; background:linear-gradient(90deg,#2563eb,#38bdf8);"></div>
+    <div style="flex:1; background:linear-gradient(90deg,#0f766e,#22c55e);"></div>
+    <div style="flex:1; background:linear-gradient(90deg,#7c3aed,#ec4899);"></div>
+  </div>
+
+  <!-- HERO -->
+  <section style="position:relative; overflow:hidden; padding:34px 24px 26px; background:
+      radial-gradient(circle at 12% 20%, rgba(255,122,0,.16), transparent 26%),
+      radial-gradient(circle at 85% 18%, rgba(14,165,233,.18), transparent 28%),
+      radial-gradient(circle at 70% 80%, rgba(124,58,237,.14), transparent 24%),
+      linear-gradient(135deg,#091221 0%, #10213d 45%, #1d4ed8 100%);
+      color:#fff;">
+      
+    <div style="position:absolute; inset:0; opacity:.15; background-image:
+      linear-gradient(rgba(255,255,255,.15) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.15) 1px, transparent 1px);
+      background-size:28px 28px;"></div>
+
+    <div style="position:absolute; top:-60px; right:-60px; width:240px; height:240px; border-radius:50%; background:radial-gradient(circle, rgba(255,255,255,.18), transparent 68%);"></div>
+    <div style="position:absolute; bottom:-80px; left:-60px; width:260px; height:260px; border-radius:50%; background:radial-gradient(circle, rgba(255,255,255,.10), transparent 70%);"></div>
+
+    <div style="position:relative; z-index:2; max-width:980px;">
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px;">
+        <span style="display:inline-flex; align-items:center; gap:9px; padding:8px 14px; border-radius:999px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.16); font-size:12px; font-weight:700;">
+          <span style="width:10px; height:10px; border-radius:50%; background:#22c55e; box-shadow:0 0 0 6px rgba(34,197,94,.15);"></span>
+          Explorador normativo
+        </span>
+        <span style="padding:8px 14px; border-radius:999px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.16); font-size:12px; font-weight:700;">Mapa legal interactivo</span>
+        <span style="padding:8px 14px; border-radius:999px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.16); font-size:12px; font-weight:700;">Normativa nacional</span>
+      </div>
+
+      <h2 style="margin:0 0 12px; font-size:clamp(30px,4.3vw,46px); line-height:1.05; font-weight:900;">
+        Red Jurídica <span style="color:#ffb86f;">MAYPI</span>
+      </h2>
+
+      <p style="margin:0; max-width:920px; font-size:16px; line-height:1.8; color:rgba(255,255,255,.92);">
+        Explora la normativa nacional mediante una red visual de nodos legales. Cada norma se conecta con los ejes centrales de protección: derechos fundamentales, búsqueda de personas, niñez y adolescencia, seguridad ciudadana, violencia, coordinación institucional y protección de datos.
+      </p>
+    </div>
+  </section>
+
+  <!-- CONTENIDO -->
+  <section style="padding:22px 18px 26px;">
+    <div style="display:grid; grid-template-columns: 1.16fr .84fr; gap:18px;" class="ml-wrap">
+
+      <!-- MAPA -->
+      <div style="background:linear-gradient(180deg,#ffffff 0%,#f8fbff 100%); border:1px solid #dbeafe; border-radius:26px; box-shadow:0 14px 34px rgba(37,99,235,.08); padding:16px; position:relative; overflow:hidden;">
+        
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
+          <div>
+            <div style="font-size:12px; font-weight:800; color:#2563eb; letter-spacing:.6px;">MAPA LEGAL INTERACTIVO</div>
+            <h3 style="margin:5px 0 0; font-size:24px; line-height:1.15;">Haz clic en una norma</h3>
+          </div>
+
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button type="button" id="ml-centerBtn" style="border:none; cursor:pointer; padding:10px 14px; border-radius:14px; background:linear-gradient(135deg,#2563eb,#0ea5e9); color:#fff; font-weight:800; box-shadow:0 10px 22px rgba(37,99,235,.22);">Ver nodo central</button>
+            <button type="button" id="ml-openAllBtn" style="border:none; cursor:pointer; padding:10px 14px; border-radius:14px; background:linear-gradient(135deg,#ff7a00,#ff9f1c); color:#fff; font-weight:800; box-shadow:0 10px 22px rgba(255,122,0,.22);">Expandir vista</button>
+          </div>
+        </div>
+
+        <div style="margin-bottom:14px; display:flex; gap:8px; flex-wrap:wrap;">
+          <input id="ml-filter" type="text" placeholder="Buscar por nombre o tema..." style="flex:1; min-width:220px; border:1px solid #cbd5e1; border-radius:14px; padding:12px 14px; font-size:14px; background:#f8fafc; color:#0f172a; outline:none;">
+          <button type="button" id="ml-clear" style="border:none; cursor:pointer; padding:12px 14px; border-radius:14px; background:#e2e8f0; color:#0f172a; font-weight:800;">Limpiar</button>
+        </div>
+
+        <!-- LEYENDA -->
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;">
+          <span style="padding:8px 12px; border-radius:999px; background:#eff6ff; color:#1d4ed8; font-size:12px; font-weight:800; border:1px solid #bfdbfe;">Constitucional</span>
+          <span style="padding:8px 12px; border-radius:999px; background:#fff7ed; color:#ea580c; font-size:12px; font-weight:800; border:1px solid #fed7aa;">Trata y reglamentación</span>
+          <span style="padding:8px 12px; border-radius:999px; background:#fdf2f8; color:#db2777; font-size:12px; font-weight:800; border:1px solid #fbcfe8;">Niñez y adolescencia</span>
+          <span style="padding:8px 12px; border-radius:999px; background:#fef2f2; color:#dc2626; font-size:12px; font-weight:800; border:1px solid #fecaca;">Violencia</span>
+          <span style="padding:8px 12px; border-radius:999px; background:#f0f9ff; color:#0284c7; font-size:12px; font-weight:800; border:1px solid #bae6fd;">Seguridad y coordinación</span>
+        </div>
+
+        <!-- RED -->
+        <div id="ml-mapStage" style="position:relative; min-height:720px; border-radius:22px; overflow:hidden; background:
+            radial-gradient(circle at 50% 50%, rgba(37,99,235,.06), transparent 25%),
+            radial-gradient(circle at 15% 20%, rgba(255,122,0,.07), transparent 18%),
+            radial-gradient(circle at 85% 20%, rgba(236,72,153,.07), transparent 18%),
+            radial-gradient(circle at 82% 78%, rgba(34,197,94,.07), transparent 18%),
+            linear-gradient(180deg,#f8fbff 0%,#eef5ff 100%);
+            border:1px solid #dbeafe;">
+
+          <!-- CONEXIONES SVG -->
+          <svg viewBox="0 0 1000 720" preserveAspectRatio="none" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none;">
+            <!-- central -->
+            <line class="ml-line ml-line-all" x1="500" y1="360" x2="500" y2="100" stroke="#93c5fd" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 10"/>
+            <line class="ml-line ml-line-all" x1="500" y1="360" x2="775" y2="170" stroke="#fdba74" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 10"/>
+            <line class="ml-line ml-line-all" x1="500" y1="360" x2="830" y2="355" stroke="#c4b5fd" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 10"/>
+            <line class="ml-line ml-line-all" x1="500" y1="360" x2="790" y2="565" stroke="#7dd3fc" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 10"/>
+            <line class="ml-line ml-line-all" x1="500" y1="360" x2="505" y2="620" stroke="#86efac" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 10"/>
+            <line class="ml-line ml-line-all" x1="500" y1="360" x2="220" y2="565" stroke="#fda4af" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 10"/>
+            <line class="ml-line ml-line-all" x1="500" y1="360" x2="165" y2="355" stroke="#f9a8d4" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 10"/>
+            <line class="ml-line ml-line-all" x1="500" y1="360" x2="225" y2="165" stroke="#bae6fd" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 10"/>
+
+            <!-- relaciones secundarias -->
+            <line class="ml-line ml-link-n2 ml-link-n3" x1="775" y1="170" x2="830" y2="355" stroke="#fed7aa" stroke-width="2.5" stroke-linecap="round" opacity=".55"/>
+            <line class="ml-line ml-link-n6 ml-link-n7" x1="165" y1="355" x2="220" y2="565" stroke="#fbcfe8" stroke-width="2.5" stroke-linecap="round" opacity=".55"/>
+            <line class="ml-line ml-link-n5 ml-link-n9" x1="790" y1="565" x2="505" y2="620" stroke="#bae6fd" stroke-width="2.5" stroke-linecap="round" opacity=".55"/>
+            <line class="ml-line ml-link-n1 ml-link-n8" x1="500" y1="100" x2="225" y2="165" stroke="#bfdbfe" stroke-width="2.5" stroke-linecap="round" opacity=".45"/>
+          </svg>
+
+          <!-- NORMA CENTRAL -->
+          <button class="ml-node ml-node-center active" data-target="n1" data-tags="constitucion derechos fundamentales privacidad dignidad libertad igualdad datos personales" style="left:50%; top:50%; transform:translate(-50%,-50%); width:210px; height:210px; background:
+              radial-gradient(circle at 30% 30%, rgba(255,255,255,.95), rgba(255,255,255,.86) 40%, rgba(219,234,254,.94) 100%),
+              linear-gradient(135deg,#eff6ff,#dbeafe);
+              border:2px solid #93c5fd; color:#0f172a; box-shadow:0 18px 40px rgba(37,99,235,.22), 0 0 0 10px rgba(37,99,235,.08);">
+            <span class="ml-node-ring"></span>
+            <span style="display:block; font-size:14px; font-weight:900; letter-spacing:.6px; color:#1d4ed8;">NORMA CENTRAL</span>
+            <span style="display:block; margin-top:8px; font-size:20px; font-weight:900; line-height:1.15;">Constitución Política del Estado</span>
+            <span style="display:block; margin-top:10px; font-size:12px; line-height:1.45; color:#334155;">Derechos fundamentales, igualdad, privacidad y bloque de constitucionalidad</span>
+          </button>
+
+          <!-- NODOS EXTERNOS -->
+          <button class="ml-node cat-orange" data-target="n2" data-tags="ley 263 trata trafico personas prevencion proteccion atencion persecucion penal" style="left:50%; top:100px; transform:translate(-50%,-50%); width:170px; height:170px;">
+            <span class="ml-num">2</span>
+            <span class="ml-title">Ley Nº 263</span>
+            <span class="ml-sub">Trata y tráfico de personas</span>
+          </button>
+
+          <button class="ml-node cat-orange" data-target="n3" data-tags="decreto supremo 1486 ley 263 reglamento coordinacion seguimiento sistemas de informacion" style="left:77.5%; top:170px; transform:translate(-50%,-50%); width:158px; height:158px;">
+            <span class="ml-num">3</span>
+            <span class="ml-title">D.S. Nº 1486</span>
+            <span class="ml-sub">Reglamentación operativa</span>
+          </button>
+
+          <button class="ml-node cat-purple" data-target="n4" data-tags="codigo penal articulo 281 bis captacion traslado retencion explotacion" style="left:83%; top:355px; transform:translate(-50%,-50%); width:160px; height:160px;">
+            <span class="ml-num">4</span>
+            <span class="ml-title">Art. 281 Bis</span>
+            <span class="ml-sub">Tipificación penal</span>
+          </button>
+
+          <button class="ml-node cat-sky" data-target="n5" data-tags="ley 264 seguridad ciudadana vida segura politicas planes estrategias instituciones" style="left:79%; top:565px; transform:translate(-50%,-50%); width:164px; height:164px;">
+            <span class="ml-num">5</span>
+            <span class="ml-title">Ley Nº 264</span>
+            <span class="ml-sub">Seguridad ciudadana</span>
+          </button>
+
+          <button class="ml-node cat-green" data-target="n9" data-tags="ley 031 autonomias descentralizacion coordinacion estatal articulacion territorial" style="left:50.5%; top:620px; transform:translate(-50%,-50%); width:164px; height:164px;">
+            <span class="ml-num">9</span>
+            <span class="ml-title">Ley Nº 031</span>
+            <span class="ml-sub">Coordinación estatal</span>
+          </button>
+
+          <button class="ml-node cat-red" data-target="n8" data-tags="ley 348 mujeres violencia proteccion inmediata reserva informacion no revictimizacion" style="left:22%; top:565px; transform:translate(-50%,-50%); width:164px; height:164px;">
+            <span class="ml-num">8</span>
+            <span class="ml-title">Ley Nº 348</span>
+            <span class="ml-sub">Vida libre de violencia</span>
+          </button>
+
+          <button class="ml-node cat-pink" data-target="n7" data-tags="ley 548 codigo niña niño adolescente interes superior proteccion integral" style="left:16.5%; top:355px; transform:translate(-50%,-50%); width:166px; height:166px;">
+            <span class="ml-num">7</span>
+            <span class="ml-title">Ley Nº 548</span>
+            <span class="ml-sub">Niñez y adolescencia</span>
+          </button>
+
+          <button class="ml-node cat-pink" data-target="n6" data-tags="ley 3933 busqueda extraviados registro informacion niñas niños adolescentes" style="left:22.5%; top:165px; transform:translate(-50%,-50%); width:168px; height:168px;">
+            <span class="ml-num">6</span>
+            <span class="ml-title">Ley Nº 3933</span>
+            <span class="ml-sub">Búsqueda prioritaria</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- PANEL INFO -->
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        
+        <div style="background:#ffffff; border:1px solid #dbeafe; border-radius:24px; box-shadow:0 14px 34px rgba(37,99,235,.08); padding:18px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+            <div>
+              <div style="font-size:12px; font-weight:800; letter-spacing:.6px; color:#2563eb;">FICHA NORMATIVA</div>
+              <h3 id="ml-title" style="margin:6px 0 0; font-size:28px; line-height:1.12;">1.- Constitución Política del Estado</h3>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <span id="ml-badge" style="padding:8px 12px; border-radius:999px; background:#eff6ff; color:#1d4ed8; font-size:12px; font-weight:800; border:1px solid #bfdbfe;">Norma base</span>
+              <span id="ml-area" style="padding:8px 12px; border-radius:999px; background:#eef2ff; color:#4338ca; font-size:12px; font-weight:800; border:1px solid #c7d2fe;">Protección constitucional</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="ml-panel" style="background:linear-gradient(180deg,#ffffff 0%,#f8fbff 100%); border:1px solid #dbeafe; border-radius:24px; box-shadow:0 16px 40px rgba(37,99,235,.10); padding:22px;">
+          
+          <div id="ml-resumen-wrap" style="display:grid; grid-template-columns:1fr; gap:14px;">
+            <div style="background:#ffffff; border:1px solid #dbeafe; border-radius:18px; padding:18px;">
+              <div style="font-size:13px; font-weight:900; color:#2563eb; margin-bottom:8px;">Contenido informativo</div>
+              <div id="ml-content" style="font-size:15px; line-height:1.9; color:#334155;">
+                La Constitución Política del Estado boliviano reconoce y protege derechos fundamentales estrechamente vinculados con la búsqueda y localización de personas, entre ellos el derecho a la vida, la integridad, la dignidad, la libertad y la seguridad. También garantiza la protección de la privacidad, la honra, la imagen, los datos personales y la confidencialidad de las comunicaciones, aspectos especialmente relevantes cuando se difunde información sensible en casos de desaparición o extravío.
+              </div>
+            </div>
+          </div>
+
+          <div id="ml-extra" style="margin-top:14px; background:linear-gradient(135deg,#eff6ff,#ffffff); border:1px solid #bfdbfe; border-radius:18px; padding:18px;">
+            <div style="font-size:13px; font-weight:900; color:#1d4ed8; margin-bottom:8px;">Relación con el mapa legal</div>
+            <div id="ml-extra-text" style="font-size:14.5px; line-height:1.85; color:#334155;">
+              Esta norma funciona como el eje principal del mapa legal, porque define los derechos fundamentales, la igualdad, la no discriminación, la privacidad, la protección de datos y la interpretación conforme al bloque de constitucionalidad y al principio pro persona.
+            </div>
+          </div>
+        </div>
+
+        <div style="background:linear-gradient(135deg,#0b1220,#16233f); color:#fff; border-radius:24px; box-shadow:0 16px 40px rgba(15,23,42,.18); padding:18px; position:relative; overflow:hidden;">
+          <div style="position:absolute; inset:auto -30px -30px auto; width:160px; height:160px; border-radius:50%; background:radial-gradient(circle, rgba(255,255,255,.12), transparent 70%);"></div>
+          <div style="position:relative; z-index:2;">
+            <div style="font-size:12px; font-weight:800; letter-spacing:.6px; color:#93c5fd;">CÓMO USAR ESTE MAPA</div>
+            <ul style="margin:10px 0 0 18px; padding:0; line-height:1.85; color:rgba(255,255,255,.9); font-size:14px;">
+              <li>Haz clic en cualquier nodo para abrir su ficha explicativa.</li>
+              <li>Utiliza el buscador para localizar una norma por nombre o tema.</li>
+              <li>Observa las conexiones visuales para entender cómo se articula el sistema normativo.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</div>
+
+<style>
+  #MAYPI_LEGAL_NET *{box-sizing:border-box}
+  #MAYPI_LEGAL_NET .ml-node{
+    position:absolute;
+    border:none;
+    border-radius:999px;
+    cursor:pointer;
+    padding:16px;
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    gap:6px;
+    color:#0f172a;
+    transition:transform .25s ease, box-shadow .25s ease, opacity .25s ease, filter .25s ease;
+    background:linear-gradient(135deg,#ffffff,#f8fafc);
+    box-shadow:0 14px 30px rgba(15,23,42,.10), inset 0 1px 0 rgba(255,255,255,.8);
+    border:2px solid #dbeafe;
+    overflow:hidden;
+  }
+  #MAYPI_LEGAL_NET .ml-node::before{
+    content:"";
+    position:absolute;
+    inset:8px;
+    border-radius:999px;
+    border:1px dashed rgba(255,255,255,.65);
+    pointer-events:none;
+  }
+  #MAYPI_LEGAL_NET .ml-node:hover{
+    transform:translate(-50%,-50%) scale(1.045) !important;
+    box-shadow:0 18px 36px rgba(15,23,42,.16);
+    z-index:3;
+  }
+  #MAYPI_LEGAL_NET .ml-node.active{
+    box-shadow:0 22px 46px rgba(37,99,235,.24), 0 0 0 8px rgba(37,99,235,.10);
+    border-color:#60a5fa !important;
+    z-index:4;
+  }
+  #MAYPI_LEGAL_NET .ml-node.active:not(.ml-node-center){
+    transform:translate(-50%,-50%) scale(1.06) !important;
+  }
+  #MAYPI_LEGAL_NET .ml-node-center .ml-node-ring{
+    position:absolute;
+    inset:-14px;
+    border-radius:999px;
+    border:2px dashed rgba(37,99,235,.25);
+    animation:mlPulse 7s linear infinite;
+    pointer-events:none;
+  }
+  #MAYPI_LEGAL_NET .ml-num{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:rgba(255,255,255,.72);
+    border:1px solid rgba(255,255,255,.7);
+    font-size:15px;
+    font-weight:900;
+    color:#0f172a;
+    backdrop-filter: blur(6px);
+  }
+  #MAYPI_LEGAL_NET .ml-title{
+    font-size:18px;
+    font-weight:900;
+    line-height:1.15;
+  }
+  #MAYPI_LEGAL_NET .ml-sub{
+    font-size:12px;
+    line-height:1.4;
+    color:#475569;
+    max-width:120px;
+  }
+  #MAYPI_LEGAL_NET .cat-orange{
+    background:linear-gradient(135deg,#fff7ed,#ffedd5);
+    border-color:#fdba74;
+  }
+  #MAYPI_LEGAL_NET .cat-purple{
+    background:linear-gradient(135deg,#f5f3ff,#ede9fe);
+    border-color:#c4b5fd;
+  }
+  #MAYPI_LEGAL_NET .cat-sky{
+    background:linear-gradient(135deg,#f0f9ff,#e0f2fe);
+    border-color:#7dd3fc;
+  }
+  #MAYPI_LEGAL_NET .cat-pink{
+    background:linear-gradient(135deg,#fdf2f8,#fce7f3);
+    border-color:#f9a8d4;
+  }
+  #MAYPI_LEGAL_NET .cat-green{
+    background:linear-gradient(135deg,#f0fdf4,#dcfce7);
+    border-color:#86efac;
+  }
+  #MAYPI_LEGAL_NET .cat-red{
+    background:linear-gradient(135deg,#fef2f2,#fee2e2);
+    border-color:#fda4af;
+  }
+  #MAYPI_LEGAL_NET .ml-dim{
+    opacity:.24 !important;
+    filter:grayscale(.15);
+  }
+  #MAYPI_LEGAL_NET .ml-hide{
+    opacity:0 !important;
+    pointer-events:none !important;
+  }
+  #MAYPI_LEGAL_NET .ml-line{
+    transition:opacity .25s ease, stroke-width .25s ease;
+  }
+  #MAYPI_LEGAL_NET .ml-line.ml-dim{
+    opacity:.10 !important;
+  }
+  @keyframes mlPulse{
+    0%{transform:rotate(0deg)}
+    100%{transform:rotate(360deg)}
+  }
+  @media (max-width:1100px){
+    #MAYPI_LEGAL_NET .ml-wrap{grid-template-columns:1fr !important}
+  }
+  @media (max-width:820px){
+    #MAYPI_LEGAL_NET #ml-mapStage{
+      min-height:860px !important;
+    }
+    #MAYPI_LEGAL_NET .ml-node-center{
+      width:180px !important;
+      height:180px !important;
+    }
+    #MAYPI_LEGAL_NET .ml-node-center span:nth-child(3){
+      font-size:17px !important;
+    }
+    #MAYPI_LEGAL_NET .ml-node{
+      width:138px !important;
+      height:138px !important;
+      padding:12px !important;
+    }
+    #MAYPI_LEGAL_NET .ml-title{font-size:15px !important}
+    #MAYPI_LEGAL_NET .ml-sub{font-size:11px !important; max-width:102px}
+    #MAYPI_LEGAL_NET [data-target="n2"]{left:50% !important; top:115px !important}
+    #MAYPI_LEGAL_NET [data-target="n3"]{left:76% !important; top:220px !important}
+    #MAYPI_LEGAL_NET [data-target="n4"]{left:82% !important; top:395px !important}
+    #MAYPI_LEGAL_NET [data-target="n5"]{left:70% !important; top:620px !important}
+    #MAYPI_LEGAL_NET [data-target="n9"]{left:50% !important; top:730px !important}
+    #MAYPI_LEGAL_NET [data-target="n8"]{left:30% !important; top:620px !important}
+    #MAYPI_LEGAL_NET [data-target="n7"]{left:18% !important; top:395px !important}
+    #MAYPI_LEGAL_NET [data-target="n6"]{left:24% !important; top:220px !important}
+  }
+  @media (max-width:560px){
+    #MAYPI_LEGAL_NET section{padding-left:12px !important; padding-right:12px !important}
+    #MAYPI_LEGAL_NET h2{font-size:30px !important}
+    #MAYPI_LEGAL_NET #ml-title{font-size:22px !important}
+    #MAYPI_LEGAL_NET #ml-mapStage{
+      min-height:980px !important;
+    }
+    #MAYPI_LEGAL_NET .ml-node-center{
+      width:164px !important;
+      height:164px !important;
+    }
+    #MAYPI_LEGAL_NET .ml-node{
+      width:126px !important;
+      height:126px !important;
+    }
+  }
+</style>
+
+<script>
+(function(){
+  const root = document.getElementById('MAYPI_LEGAL_NET');
+  if(!root) return;
+
+  const nodes = Array.from(root.querySelectorAll('.ml-node'));
+  const lines = Array.from(root.querySelectorAll('.ml-line'));
+  const filterInput = root.querySelector('#ml-filter');
+  const clearBtn = root.querySelector('#ml-clear');
+  const centerBtn = root.querySelector('#ml-centerBtn');
+  const openAllBtn = root.querySelector('#ml-openAllBtn');
+
+  const titleEl = root.querySelector('#ml-title');
+  const badgeEl = root.querySelector('#ml-badge');
+  const areaEl = root.querySelector('#ml-area');
+  const contentEl = root.querySelector('#ml-content');
+  const extraEl = root.querySelector('#ml-extra-text');
+
+  const data = {
+    n1: {
+      title: '1.- Constitución Política del Estado',
+      badge: 'Norma base',
+      badgeBg: '#eff6ff',
+      badgeColor: '#1d4ed8',
+      badgeBorder: '#bfdbfe',
+      area: 'Protección constitucional',
+      areaBg: '#eef2ff',
+      areaColor: '#4338ca',
+      areaBorder: '#c7d2fe',
+      content: 'La Constitución Política del Estado boliviano reconoce y protege derechos fundamentales estrechamente vinculados con la búsqueda y localización de personas, entre ellos el derecho a la vida, la integridad, la dignidad, la libertad y la seguridad. También garantiza la protección de la privacidad, la honra, la imagen, los datos personales y la confidencialidad de las comunicaciones, aspectos especialmente relevantes cuando se difunde información sensible en casos de desaparición o extravío.<br><br>Del mismo modo, el texto constitucional establece el principio de igualdad y no discriminación, lo que exige una atención particular a personas en situación de vulnerabilidad, como niñas, niños, adolescentes, mujeres, personas con discapacidad, migrantes y miembros de pueblos indígena originario campesinos. En el caso de menores de edad, además, debe considerarse de manera prioritaria el interés superior del niño.<br><br>A ello se suma la aplicación del bloque de constitucionalidad y del principio pro persona, que permiten interpretar la protección de estos derechos en armonía con los estándares internacionales de derechos humanos. En este marco, la información presentada en esta página busca visibilizar la importancia de una actuación rápida, humana y respetuosa de los derechos fundamentales frente a situaciones de desaparición de personas.',
+      extra: 'Esta norma funciona como el eje principal del mapa legal, porque define los derechos fundamentales, la igualdad, la no discriminación, la privacidad, la protección de datos y la interpretación conforme al bloque de constitucionalidad y al principio pro persona.'
+    },
+    n2: {
+      title: '2.- Ley Nº 263, Integral contra la Trata y Tráfico de Personas',
+      badge: 'Ley especial',
+      badgeBg: '#fff7ed',
+      badgeColor: '#ea580c',
+      badgeBorder: '#fed7aa',
+      area: 'Prevención y protección',
+      areaBg: '#ffedd5',
+      areaColor: '#c2410c',
+      areaBorder: '#fdba74',
+      content: 'Establece medidas de prevención, protección, atención y persecución penal frente a la trata y tráfico de personas. También incorpora principios relevantes como celeridad, confidencialidad, no revictimización, no discriminación e interés superior del niño, niña y adolescente.',
+      extra: 'Se conecta directamente con la Constitución y con el tipo penal del artículo 281 Bis, ya que convierte la protección general en mecanismos legales específicos de prevención, asistencia y persecución de hechos vinculados a desaparición o captación de personas.'
+    },
+    n3: {
+      title: '3.- Decreto Supremo Nº 1486, Reglamentario de la Ley Nº 263',
+      badge: 'Reglamentación',
+      badgeBg: '#ecfeff',
+      badgeColor: '#0f766e',
+      badgeBorder: '#99f6e4',
+      area: 'Aplicación operativa',
+      areaBg: '#ccfbf1',
+      areaColor: '#0f766e',
+      areaBorder: '#99f6e4',
+      content: 'Desarrolla la aplicación operativa de la Ley Nº 263, regulando aspectos de coordinación institucional, sistemas de información, seguimiento de casos, indicadores y pautas de difusión preventiva, además de restricciones para proteger la identidad de las víctimas.',
+      extra: 'Este nodo traduce la ley especial en acciones institucionales concretas. Por ello está conectado con la Ley Nº 263, con la seguridad ciudadana y con la coordinación estatal.'
+    },
+    n4: {
+      title: '4.- Código Penal Boliviano, artículo 281 Bis',
+      badge: 'Tipo penal',
+      badgeBg: '#f5f3ff',
+      badgeColor: '#7c3aed',
+      badgeBorder: '#ddd6fe',
+      area: 'Persecución penal',
+      areaBg: '#ede9fe',
+      areaColor: '#6d28d9',
+      areaBorder: '#c4b5fd',
+      content: 'Tipifica y sanciona la trata de personas cuando existen actos como captación, traslado, retención o recepción de personas con fines de explotación, mediante engaño, coacción, amenaza, violencia o aprovechamiento de vulnerabilidad.',
+      extra: 'Su conexión con la Ley Nº 263 muestra que la protección no es solo preventiva, sino también sancionadora. Este artículo permite identificar cuándo una desaparición puede constituir un hecho penal grave.'
+    },
+    n5: {
+      title: '5.- Ley Nº 264, del Sistema Nacional de Seguridad Ciudadana “Para una Vida Segura”',
+      badge: 'Seguridad ciudadana',
+      badgeBg: '#eff6ff',
+      badgeColor: '#2563eb',
+      badgeBorder: '#bfdbfe',
+      area: 'Sistema institucional',
+      areaBg: '#f0f9ff',
+      areaColor: '#0284c7',
+      areaBorder: '#bae6fd',
+      content: 'Organiza un sistema de políticas, planes, estrategias e instituciones en materia de seguridad ciudadana, promoviendo la coordinación entre entidades públicas, la producción de información, el uso de indicadores y la articulación territorial.',
+      extra: 'Este nodo muestra la dimensión organizativa del problema. Se articula con la Ley Nº 031 y con el decreto reglamentario para explicar que la respuesta frente a desapariciones requiere acción coordinada, territorial e institucional.'
+    },
+    n6: {
+      title: '6.- Ley Nº 3933, sobre búsqueda, registro, información y difusión de datos relativos a niñas, niños y adolescentes extraviados',
+      badge: 'Búsqueda prioritaria',
+      badgeBg: '#fdf2f8',
+      badgeColor: '#db2777',
+      badgeBorder: '#fbcfe8',
+      area: 'Niñez extraviada',
+      areaBg: '#fce7f3',
+      areaColor: '#be185d',
+      areaBorder: '#f9a8d4',
+      content: 'Regula la denuncia, búsqueda, registro y difusión de información sobre niñas, niños y adolescentes extraviados, bajo principios de gratuidad, prioridad y celeridad, y prevé mecanismos especializados de búsqueda y difusión.',
+      extra: 'Su ubicación junto a la Ley Nº 548 refleja que la búsqueda de menores exige una respuesta más urgente, especializada y prioritaria, en atención al interés superior del niño.'
+    },
+    n7: {
+      title: '7.- Ley Nº 548, Código Niña, Niño y Adolescente',
+      badge: 'Protección integral',
+      badgeBg: '#fdf2f8',
+      badgeColor: '#db2777',
+      badgeBorder: '#fbcfe8',
+      area: 'Interés superior del niño',
+      areaBg: '#f0fdf4',
+      areaColor: '#16a34a',
+      areaBorder: '#bbf7d0',
+      content: 'Refuerza la protección integral de niñas, niños y adolescentes, estableciendo como eje central el interés superior del niño y exigiendo una actuación prioritaria, especializada y respetuosa de sus derechos.',
+      extra: 'Este nodo da contexto protector a la Ley Nº 3933 y a la Constitución, porque explica que la niñez y adolescencia no solo requiere búsqueda, sino también tutela reforzada y actuación especializada.'
+    },
+    n8: {
+      title: '8.- Ley Nº 348, Integral para Garantizar a las Mujeres una Vida Libre de Violencia',
+      badge: 'Vida libre de violencia',
+      badgeBg: '#fef2f2',
+      badgeColor: '#dc2626',
+      badgeBorder: '#fecaca',
+      area: 'Protección de mujeres',
+      areaBg: '#fee2e2',
+      areaColor: '#b91c1c',
+      areaBorder: '#fda4af',
+      content: 'Establece medidas de prevención, protección y atención frente a distintas formas de violencia contra las mujeres, con énfasis en la protección inmediata, la no revictimización, la reserva de información y la coordinación institucional.',
+      extra: 'Su conexión con la Constitución permite entender que ciertos casos de desaparición pueden estar asociados a violencia de género, amenazas o contextos de especial riesgo que exigen una respuesta diferenciada.'
+    },
+    n9: {
+      title: '9.- Ley Nº 031, Marco de Autonomías y Descentralización',
+      badge: 'Articulación estatal',
+      badgeBg: '#f0f9ff',
+      badgeColor: '#0284c7',
+      badgeBorder: '#bae6fd',
+      area: 'Coordinación intergubernativa',
+      areaBg: '#e0f2fe',
+      areaColor: '#0369a1',
+      areaBorder: '#7dd3fc',
+      content: 'Regula la articulación competencial entre los distintos niveles del Estado y permite comprender la importancia de la coordinación intergubernativa, territorial y operativa en temas vinculados con seguridad y gestión de riesgos.',
+      extra: 'Este nodo explica cómo el marco jurídico se despliega territorialmente. Se conecta con la seguridad ciudadana y con la reglamentación operativa porque la respuesta efectiva depende de una actuación coordinada entre niveles del Estado.'
+    }
+  };
+
+  function setInfo(key){
+    const item = data[key];
+    if(!item) return;
+    titleEl.innerHTML = item.title;
+    contentEl.innerHTML = item.content;
+    extraEl.innerHTML = item.extra;
+
+    badgeEl.textContent = item.badge;
+    badgeEl.style.background = item.badgeBg;
+    badgeEl.style.color = item.badgeColor;
+    badgeEl.style.border = '1px solid ' + item.badgeBorder;
+
+    areaEl.textContent = item.area;
+    areaEl.style.background = item.areaBg;
+    areaEl.style.color = item.areaColor;
+    areaEl.style.border = '1px solid ' + item.areaBorder;
+  }
+
+  function activateNode(key){
+    nodes.forEach(node => node.classList.toggle('active', node.dataset.target === key));
+    setInfo(key);
+
+    const relationMap = {
+      n1: ['ml-line-all','ml-link-n1'],
+      n2: ['ml-line-all','ml-link-n2'],
+      n3: ['ml-line-all','ml-link-n3'],
+      n4: ['ml-line-all'],
+      n5: ['ml-line-all','ml-link-n5'],
+      n6: ['ml-line-all','ml-link-n6'],
+      n7: ['ml-line-all','ml-link-n7'],
+      n8: ['ml-line-all','ml-link-n8'],
+      n9: ['ml-line-all','ml-link-n9']
+    };
+
+    lines.forEach(line => {
+      line.classList.add('ml-dim');
+      const classes = relationMap[key] || [];
+      const show = classes.some(c => line.classList.contains(c));
+      if(show) line.classList.remove('ml-dim');
+    });
+  }
+
+  nodes.forEach(node => {
+    node.addEventListener('click', () => activateNode(node.dataset.target));
+  });
+
+  filterInput.addEventListener('input', function(){
+    const q = this.value.toLowerCase().trim();
+
+    nodes.forEach(node => {
+      const text = node.textContent.toLowerCase();
+      const tags = (node.dataset.tags || '').toLowerCase();
+      const match = !q || text.includes(q) || tags.includes(q);
+      node.classList.toggle('ml-dim', q && !match);
+      node.classList.toggle('ml-hide', false);
+    });
+
+    if(!q){
+      lines.forEach(line => line.classList.remove('ml-dim'));
+    } else {
+      lines.forEach(line => line.classList.add('ml-dim'));
+    }
+  });
+
+  clearBtn.addEventListener('click', () => {
+    filterInput.value = '';
+    nodes.forEach(node => {
+      node.classList.remove('ml-dim','ml-hide');
+    });
+    lines.forEach(line => line.classList.remove('ml-dim'));
+    activateNode('n1');
+  });
+
+  centerBtn.addEventListener('click', () => activateNode('n1'));
+
+  openAllBtn.addEventListener('click', () => {
+    filterInput.value = '';
+    nodes.forEach(node => node.classList.remove('ml-dim','ml-hide'));
+    lines.forEach(line => line.classList.remove('ml-dim'));
+  });
+
+  activateNode('n1');
+})();
+</script>

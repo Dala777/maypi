@@ -10,14 +10,6 @@ export const defaultNavigation1: FuseNavigationItem[] = [
         icon    : 'heroicons_outline:magnifying-glass',
         children: [
             {
-                id   : 'apps.search-rescue.tracking',
-                title: 'Reporte de Trackeo',
-                type : 'basic',
-                icon : 'heroicons_outline:map-pin',
-                link : '/apps/search-rescue/tracking',
-                roles: [1, 2],
-            },
-            {
                 id   : 'apps.search-rescue.emergency',
                 title: 'Solicitudes de Ayuda Botón de Emergencia',
                 type : 'basic',
@@ -44,7 +36,7 @@ export const defaultNavigation1: FuseNavigationItem[] = [
             },
             {
                 id   : 'apps.configuration.missing-requests',
-                title: 'Solicitud de Desaparecidos',
+                title: 'Reportes de Desaparecidos',
                 type : 'basic',
                 icon : 'heroicons_outline:user-minus',
                 link : '/dashboards/missing',

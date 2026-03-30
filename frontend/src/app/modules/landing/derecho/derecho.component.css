@@ -1,0 +1,119 @@
+/* Derecho Component Styles */
+:host ::ng-deep .derecho-tabs .mat-mdc-tab-labels {
+  background: linear-gradient(90deg, #f8f9fa 0%, #ffffff 100%);
+  border-bottom: 2px solid #e9ecef;
+}
+
+:host ::ng-deep .derecho-tabs .mat-mdc-tab {
+  color: #2e4053;
+  font-weight: 600;
+  font-size: 14px;
+  min-width: 140px;
+  transition: all 0.3s ease;
+}
+
+:host ::ng-deep .derecho-tabs .mat-mdc-tab:hover {
+  background-color: #fff8dc;
+}
+
+:host ::ng-deep .derecho-tabs .mat-mdc-tab.mat-mdc-tab-active {
+  color: #ffc107;
+  font-weight: 700;
+}
+
+:host ::ng-deep .derecho-tabs .mdc-tab-indicator__content {
+  border-color: #ffc107;
+  height: 3px;
+}
+
+:host ::ng-deep .derecho-tabs .mat-mdc-tab-body-wrapper {
+  padding: 0;
+  width: 100%;
+}
+
+/* Dynamic content containers - WIDE LAYOUT */
+:host ::ng-deep .derecho-tab-content {
+  width: 100%;
+  max-width: 100%;
+  display: block;
+}
+
+:host ::ng-deep .derecho-dynamic-content {
+  width: 100%;
+  max-width: 100%;
+  min-height: auto;
+  box-sizing: border-box;
+}
+
+/* Ensure all child elements stretch to full width */
+:host ::ng-deep .derecho-dynamic-content > * {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Dynamic content containers */
+:host ::ng-deep .mat-mdc-tab-body-content {
+  padding: 0;
+  width: 100%;
+}
+
+/* Ensure proper display for dynamic HTML */
+[id*="MAYPI"],
+[id*="maypi"],
+[id*="Ruta"],
+[id*="ruta"] {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Fix for responsive container - allow overflow */
+:host ::ng-deep .derecho-tabs .mat-mdc-tab-body {
+  overflow-x: auto;
+  overflow-y: visible;
+}
+
+/* Remove constraints that limit width */
+:host ::ng-deep .derecho-tabs {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Prose styling for content */
+.prose {
+  color: #334155;
+  line-height: 1.6;
+}
+
+.prose h1,
+.prose h2,
+.prose h3 {
+  color: #2e4053;
+  font-weight: 700;
+}
+
+.prose ul {
+  margin-left: 20px;
+}
+
+.prose li {
+  margin: 8px 0;
+}
+
+/* Ensure interactivity - button and input visibility */
+:host ::ng-deep button,
+:host ::ng-deep input,
+:host ::ng-deep select,
+:host ::ng-deep textarea,
+:host ::ng-deep .btn,
+:host ::ng-deep [role="button"] {
+  cursor: pointer;
+  z-index: 10;
+}
+
+:host ::ng-deep canvas,
+:host ::ng-deep svg {
+  max-width: 100%;
+  height: auto;
+}

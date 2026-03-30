@@ -1,0 +1,48 @@
+/* Psicología Component Styles */
+:host ::ng-deep .psicologia-tabs .mat-mdc-tab-labels {
+  background: linear-gradient(90deg, #f8f9fa 0%, #ffffff 100%);
+  border-bottom: 2px solid #e9ecef;
+}
+
+:host ::ng-deep .psicologia-tabs .mat-mdc-tab {
+  color: #2e4053;
+  font-weight: 600;
+  font-size: 14px;
+  min-width: 140px;
+  transition: all 0.3s ease;
+}
+
+:host ::ng-deep .psicologia-tabs .mat-mdc-tab:hover {
+  background-color: #f5f3ff;
+}
+
+:host ::ng-deep .psicologia-tabs .mat-mdc-tab.mat-mdc-tab-active {
+  color: #ffc107;
+  font-weight: 700;
+}
+
+:host ::ng-deep .psicologia-tabs .mdc-tab-indicator__content {
+  border-color: #ffc107;
+  height: 3px;
+}
+
+:host ::ng-deep .psicologia-tabs .mat-mdc-tab-body-wrapper {
+  padding: 0;
+}
+
+/* General typography */
+:host ::ng-deep h2 {
+  color: #2e4053;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+:host ::ng-deep h3 {
+  color: #334155;
+  font-weight: 600;
+}
+
+:host ::ng-deep p {
+  color: #475569;
+  line-height: 1.6;
+}

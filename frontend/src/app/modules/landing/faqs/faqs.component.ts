@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { RouterLink } from '@angular/router';
 import { ChatbotComponent } from 'app/modules/landing/chatbot/chatbot.component';
+import { MatMenuModule } from "@angular/material/menu"
 
 interface FaqCategory {
   title: string;
@@ -27,7 +28,8 @@ interface Faq {
     MatIconModule,
     MatExpansionModule,
     ChatbotComponent,
-    RouterLink
+    RouterLink,
+    MatMenuModule,
   ]
 })
 export class FaqsComponent {

@@ -5,11 +5,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterLink } from '@angular/router';
 import { ChatbotComponent } from 'app/modules/landing/chatbot/chatbot.component';
-import { MatMenuModule } from "@angular/material/menu"
+import { MatMenuModule } from '@angular/material/menu';
+import { PsicologiaQuizComponent } from './quiz/quiz.component';
 
 @Component({
-  selector: 'app-guides',
-  templateUrl: './guides.component.html',
+  selector: 'app-psicologia',
+  templateUrl: './psicologia.component.html',
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [
@@ -20,16 +21,13 @@ import { MatMenuModule } from "@angular/material/menu"
     ChatbotComponent,
     RouterLink,
     MatMenuModule,
-  ]
+    PsicologiaQuizComponent,
+  ],
 })
-export class GuidesComponent {
-  // Propiedad para controlar la visibilidad del menú móvil
+export class PsicologiaComponent {
   isMenuOpen: boolean = false;
-  
-  // Propiedad para mostrar el año actual en el footer
   currentYear: number = new Date().getFullYear();
-  
-  // Método para alternar la visibilidad del menú móvil
+
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
   }

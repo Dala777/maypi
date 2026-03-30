@@ -33,6 +33,51 @@
                                 <span>FAQs</span>
                             </a>
                         </li>
+
+                        <li class="text-[#2E4053] hover:text-[#808000] transition-colors group">
+                            <button 
+                                class="flex items-center"
+                                [matMenuTriggerFor]="derechoMenu"
+                                title="Acceder a recursos de Derecho"
+                            >
+                                <mat-icon fontIcon="gavel" class="mr-2"></mat-icon>
+                                <span>Derecho</span>
+                            </button>
+                            <mat-menu #derechoMenu="matMenu">
+                                <button mat-menu-item [routerLink]="['/landing/derecho']" title="Red Jurídica">
+                                    <mat-icon fontIcon="description" class="mr-2"></mat-icon>
+                                    <span>Red Jurídica</span>
+                                </button>
+                                <button mat-menu-item [routerLink]="['/landing/derecho']" [queryParams]="{ tab: 1 }" title="Camino de Denuncia">
+                                    <mat-icon fontIcon="schedule" class="mr-2"></mat-icon>
+                                    <span>Camino de Denuncia</span>
+                                </button>
+                            </mat-menu>
+                        </li>
+                        <li class="text-[#2E4053] hover:text-[#808000] transition-colors group">
+                            <button 
+                                class="flex items-center"
+                                [matMenuTriggerFor]="psicologiaMenu"
+                                title="Acceder a recursos de Psicología"
+                            >
+                                <mat-icon fontIcon="psychology" class="mr-2"></mat-icon>
+                                <span>Psicología</span>
+                            </button>
+                            <mat-menu #psicologiaMenu="matMenu">
+                                <button mat-menu-item [routerLink]="['/landing/psicologia']" title="Guía Psicológica">
+                                    <mat-icon fontIcon="book" class="mr-2"></mat-icon>
+                                    <span>Guía Psicológica</span>
+                                </button>
+                                <button mat-menu-item [routerLink]="['/landing/psicologia']" [queryParams]="{ tab: 1 }" title="Herramientas">
+                                    <mat-icon fontIcon="build" class="mr-2"></mat-icon>
+                                    <span>Herramientas</span>
+                                </button>
+                                <button mat-menu-item [routerLink]="['/landing/psicologia']" [queryParams]="{ tab: 2 }" title="Auto-evaluación">
+                                    <mat-icon fontIcon="quiz" class="mr-2"></mat-icon>
+                                    <span>Auto-evaluación</span>
+                                </button>
+                            </mat-menu>
+                        </li>
                     </ul>
                     
                     <div class="flex items-center gap-3">
@@ -81,6 +126,19 @@
                         <a [routerLink]="['/home/faqs']" class="flex items-center" title="Ir a la sección de preguntas frecuentes">
                             <mat-icon fontIcon="help" class="mr-2"></mat-icon>
                             <span>FAQs</span>
+                        </a>
+                    </li>
+
+                    <li class="text-[#2E4053] hover:text-[#808000] transition-colors border-t border-[#2E4053]/10 pt-4 mt-4">
+                        <a [routerLink]="['/landing/derecho']" class="flex items-center" title="Acceder a recursos de Derecho">
+                            <mat-icon fontIcon="gavel" class="mr-2"></mat-icon>
+                            <span>Derecho</span>
+                        </a>
+                    </li>
+                    <li class="text-[#2E4053] hover:text-[#808000] transition-colors">
+                        <a [routerLink]="['/landing/psicologia']" class="flex items-center" title="Acceder a recursos de Psicología">
+                            <mat-icon fontIcon="psychology" class="mr-2"></mat-icon>
+                            <span>Psicología</span>
                         </a>
                     </li>
                     <li class="pt-4">
@@ -500,77 +558,108 @@
             </div>
         </section>
 
-        <!-- Testimonios -->
-        <section id="ayuda" class="py-20 bg-white">
+        <!-- Organizaciones Amigas -->
+        <section id="organizaciones" class="py-20 bg-white">
             <div class="container mx-auto px-4">
                 <div class="text-center mb-16">
-                    <h2
-                        class="text-3xl md:text-4xl font-bold text-[#2E4053] mb-4"
-                    >
-                        Casos Resueltos
+                    <h2 class="text-3xl md:text-4xl font-bold text-[#2E4053] mb-4">
+                        Organizaciones Amigas
                     </h2>
                     <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                        Conoce algunas de las historias de familias que han
-                        logrado reencontrarse gracias a Maypi.
+                        Colaboramos con destacadas organizaciones comprometidas con la búsqueda de personas desaparecidas y la protección de derechos humanos en Bolivia.
                     </p>
                 </div>
 
-                <div
-                    class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto"
-                >
-                    <div class="border-2 border-[#F2F2F2] rounded-lg p-6">
-                        <div class="flex items-start mb-4">
-                            <div
-                                class="w-12 h-12 rounded-full bg-[#F2F2F2] mr-4"
-                            ></div>
-                            <div>
-                                <h3 class="font-semibold text-[#2E4053]">
-                                    Familia Martínez
-                                </h3>
-                                <p class="text-sm text-gray-500">
-                                    La Paz, Bolivia
-                                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                    <!-- Organización 1: Ave de Cristal -->
+                    <a 
+                        href="https://www.facebook.com/plataformaTTP/?locale=es_LA"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="organization-card group"
+                        title="Visitar Ave de Cristal"
+                        aria-label="Enlace a Ave de Cristal"
+                    >
+                        <div class="organization-image-container">
+                            <img
+                                src="assets/images/organization/ave.png"
+                                alt="Logo de Ave de Cristal"
+                                class="organization-image"
+                                loading="lazy"
+                            />
+                            <div class="organization-overlay"></div>
+                            <div class="organization-icon">
+                                <mat-icon fontIcon="open_in_new" class="text-2xl"></mat-icon>
                             </div>
                         </div>
-                        <p class="text-gray-600">
-                            "Gracias a Maypi pudimos encontrar a nuestro hijo
-                            después de 3 semanas de búsqueda. La difusión en la
-                            plataforma fue clave para que alguien lo reconociera
-                            y nos contactara."
-                        </p>
-                    </div>
+                        <div class="organization-info">
+                            <h3 class="text-lg font-bold text-[#2E4053]">Ave de Cristal</h3>
+                            <p class="text-sm text-gray-600">Plataforma de Trata y Tráfico de Personas</p>
+                        </div>
+                    </a>
 
-                    <div class="border-2 border-[#F2F2F2] rounded-lg p-6">
-                        <div class="flex items-start mb-4">
-                            <div
-                                class="w-12 h-12 rounded-full bg-[#F2F2F2] mr-4"
-                            ></div>
-                            <div>
-                                <h3 class="font-semibold text-[#2E4053]">
-                                    Familia Gutiérrez
-                                </h3>
-                                <p class="text-sm text-gray-500">
-                                    Santa Cruz, Bolivia
-                                </p>
+                    <!-- Organización 2: Save the Children -->
+                    <a 
+                        href="https://www.savethechildren.org.bo/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="organization-card group"
+                        title="Visitar Save the Children"
+                        aria-label="Enlace a Save the Children"
+                    >
+                        <div class="organization-image-container">
+                            <img
+                                src="assets/images/organization/save.jpg"
+                                alt="Logo de Save the Children"
+                                class="organization-image"
+                                loading="lazy"
+                            />
+                            <div class="organization-overlay"></div>
+                            <div class="organization-icon">
+                                <mat-icon fontIcon="open_in_new" class="text-2xl"></mat-icon>
                             </div>
                         </div>
-                        <p class="text-gray-600">
-                            "La colaboración entre Maypi y las autoridades fue
-                            fundamental para encontrar a mi hermana. La rapidez
-                            con la que se difundió su información salvó su
-                            vida."
-                        </p>
-                    </div>
+                        <div class="organization-info">
+                            <h3 class="text-lg font-bold text-[#2E4053]">Save the Children</h3>
+                            <p class="text-sm text-gray-600">Protección de la Infancia</p>
+                        </div>
+                    </a>
+
+                    <!-- Organización 3: Red de Lucha contra la Trata y Tráfico -->
+                    <a 
+                        href="https://www.facebook.com/p/Red-Departamental-De-Lucha-Contra-La-Trata-y-Tr%C3%A1fico-De-Personas-Cochabamba-100064177021035/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="organization-card group"
+                        title="Visitar Red de Lucha contra la Trata y Tráfico"
+                        aria-label="Enlace a Red de Lucha contra la Trata y Tráfico"
+                    >
+                        <div class="organization-image-container">
+                            <img
+                                src="assets/images/organization/trata.jpg"
+                                alt="Logo de Red de Lucha contra la Trata y Tráfico"
+                                class="organization-image"
+                                loading="lazy"
+                            />
+                            <div class="organization-overlay"></div>
+                            <div class="organization-icon">
+                                <mat-icon fontIcon="open_in_new" class="text-2xl"></mat-icon>
+                            </div>
+                        </div>
+                        <div class="organization-info">
+                            <h3 class="text-lg font-bold text-[#2E4053]">Red de Lucha contra la Trata</h3>
+                            <p class="text-sm text-gray-600">Red Departamental de Cochabamba</p>
+                        </div>
+                    </a>
                 </div>
 
                 <div class="mt-16 text-center">
-                    <a
-                        href="home/guides"
-                        class="bg-[#2E4053] text-white hover:bg-[#2E4053]/90 px-6 py-3 rounded-md transition-colors"
-                        title="Leer más historias de éxito"
-                    >
-                        Leer más historias
-                    </a>
+                    <p class="text-gray-600 max-w-2xl mx-auto">
+                        ¿Tu organización quiere colaborar con nosotros? 
+                        <a href="#contacto" class="text-[#2E4053] font-semibold hover:text-[#FFC107] transition-colors">
+                            Contáctanos
+                        </a>
+                    </p>
                 </div>
             </div>
         </section>
@@ -1002,10 +1091,15 @@
             </div>
 
             <div class="border-t border-white/20 mt-12 pt-8 text-center">
-                <p class="text-white/70">
-                    &copy; {{ currentYear }} Maypi - Todos los derechos
-                    reservados
-                </p>
+                <button 
+                    type="button"
+                    (click)="openTermsPrivacyModal()"
+                    class="text-white/70 hover:text-[#FFC107] transition-colors cursor-pointer bg-transparent border-0 p-0"
+                    title="Ver términos y condiciones y política de privacidad"
+                    aria-label="Abrir términos y condiciones y política de privacidad"
+                >
+                    &copy; {{ currentYear }} Maypi - Todos los derechos reservados
+                </button>
             </div>
         </div>
     </footer>

@@ -2,31 +2,38 @@ import { CommonModule } from "@angular/common"
 import { Component, type OnInit, ViewEncapsulation, inject } from "@angular/core" // ← Agregué inject
 import { MatButtonModule } from "@angular/material/button"
 import { MatIconModule } from "@angular/material/icon"
+import { MatDialog, MatDialogModule } from "@angular/material/dialog"
 import { RouterLink } from "@angular/router"
 import { PublicService } from "./services/public.service" // ← Quité el type
 import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, switchMap, tap } from "rxjs"
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms"
 import type { ContactSupportStore } from "app/modules/dashboard/models/contact-support"
 import { ChatbotComponent } from "app/modules/landing/chatbot/chatbot.component"
+import { MatMenuModule } from "@angular/material/menu"
+import { TermsPrivacyModalComponent } from "./terms-privacy-modal/terms-privacy-modal.component"
 
 @Component({
   selector: "landing-home",
   templateUrl: "./home.component.html",
+  styleUrls: ["./home.component.scss"],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [
     MatButtonModule,
     RouterLink,
     MatIconModule,
+    MatDialogModule,
     CommonModule,
     FormsModule,
     ChatbotComponent,
     ReactiveFormsModule,
+    MatMenuModule,
   ],
 })
 export class LandingHomeComponent implements OnInit {
   // ← Usar inject() en lugar del constructor
   private _publicService = inject(PublicService)
+  private _dialog = inject(MatDialog)
 
   // Propiedad para controlar la visibilidad del menú móvil
   isMenuOpen = false
@@ -217,11 +224,20 @@ export class LandingHomeComponent implements OnInit {
     ),
   )
 
-  // ← Eliminar el constructor ya que usamos inject()
   ngOnInit(): void {}
 
   // Método para alternar la visibilidad del menú móvil
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen
+  }
+
+  // Método para abrir el modal de términos y privacidad
+  openTermsPrivacyModal(): void {
+    this._dialog.open(TermsPrivacyModalComponent, {
+      width: '900px',
+      maxWidth: '95vw',
+      disableClose: false,
+      panelClass: 'terms-privacy-dialog',
+    })
   }
 }

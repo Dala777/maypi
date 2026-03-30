@@ -1,0 +1,160 @@
+// Estilos para el componente home
+:host {
+  --motion-duration: 300ms;
+  --motion-easing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// Estilos para el botón de copyright
+button[title*="términos"] {
+  position: relative;
+  font-size: inherit;
+  
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #FFC107;
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+// ============================================
+// Estilos para las Tarjetas de Organizaciones
+// ============================================
+.organization-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  text-decoration: none;
+  transition: all var(--motion-duration) var(--motion-easing);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #FFC107;
+    outline-offset: 2px;
+  }
+}
+
+.organization-image-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.organization-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  padding: 16px;
+  transition: transform var(--motion-duration) var(--motion-easing);
+
+  .organization-card:hover & {
+    transform: scale(1.08);
+  }
+}
+
+.organization-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(46, 64, 83, 0.6);
+  opacity: 0;
+  transition: opacity var(--motion-duration) var(--motion-easing);
+
+  .organization-card:hover & {
+    opacity: 1;
+  }
+}
+
+.organization-icon {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  opacity: 0;
+  transition: opacity var(--motion-duration) var(--motion-easing);
+
+  mat-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .organization-card:hover & {
+    opacity: 1;
+  }
+}
+
+.organization-info {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  background: white;
+
+  h3 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    color: #2E4053;
+    transition: color var(--motion-duration) var(--motion-easing);
+  }
+
+  p {
+    margin: 0;
+    font-size: 13px;
+    color: #999;
+    line-height: 1.4;
+  }
+
+  .organization-card:hover & {
+    h3 {
+      color: #FFC107;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .organization-card {
+    &:active {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+    }
+  }
+
+  .organization-image {
+    .organization-card:active & {
+      transform: scale(1.04);
+    }
+  }
+
+  .organization-overlay {
+    .organization-card:active & {
+      opacity: 1;
+    }
+  }
+
+  .organization-icon {
+    .organization-card:active & {
+      opacity: 1;
+    }
+  }
+}
+

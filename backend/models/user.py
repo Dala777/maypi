@@ -22,7 +22,7 @@ class User(Base):
         nullable=False
     )
     password: Mapped[str] = mapped_column(Text)
-    phone: Mapped[int] = mapped_column(Integer)
+    phone: Mapped[str] = mapped_column(Text)
     token_firebase: Mapped[str] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(ZoneInfo("America/La_Paz")))
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(ZoneInfo("America/La_Paz")), onupdate=datetime.now(ZoneInfo("America/La_Paz")))

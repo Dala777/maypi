@@ -31,6 +31,50 @@
                   <span>FAQs</span>
                 </a>
               </li>
+              <li class="text-[#2E4053] hover:text-[#808000] transition-colors group">
+                            <button 
+                                class="flex items-center"
+                                [matMenuTriggerFor]="derechoMenu"
+                                title="Acceder a recursos de Derecho"
+                            >
+                                <mat-icon fontIcon="gavel" class="mr-2"></mat-icon>
+                                <span>Derecho</span>
+                            </button>
+                            <mat-menu #derechoMenu="matMenu">
+                                <button mat-menu-item [routerLink]="['/landing/derecho']" title="Red Jurídica">
+                                    <mat-icon fontIcon="description" class="mr-2"></mat-icon>
+                                    <span>Red Jurídica</span>
+                                </button>
+                                <button mat-menu-item [routerLink]="['/landing/derecho']" [queryParams]="{ tab: 1 }" title="Camino de Denuncia">
+                                    <mat-icon fontIcon="schedule" class="mr-2"></mat-icon>
+                                    <span>Camino de Denuncia</span>
+                                </button>
+                            </mat-menu>
+                        </li>
+                        <li class="text-[#2E4053] hover:text-[#808000] transition-colors group">
+                            <button 
+                                class="flex items-center"
+                                [matMenuTriggerFor]="psicologiaMenu"
+                                title="Acceder a recursos de Psicología"
+                            >
+                                <mat-icon fontIcon="psychology" class="mr-2"></mat-icon>
+                                <span>Psicología</span>
+                            </button>
+                            <mat-menu #psicologiaMenu="matMenu">
+                                <button mat-menu-item [routerLink]="['/landing/psicologia']" title="Guía Psicológica">
+                                    <mat-icon fontIcon="book" class="mr-2"></mat-icon>
+                                    <span>Guía Psicológica</span>
+                                </button>
+                                <button mat-menu-item [routerLink]="['/landing/psicologia']" [queryParams]="{ tab: 1 }" title="Herramientas">
+                                    <mat-icon fontIcon="build" class="mr-2"></mat-icon>
+                                    <span>Herramientas</span>
+                                </button>
+                                <button mat-menu-item [routerLink]="['/landing/psicologia']" [queryParams]="{ tab: 2 }" title="Auto-evaluación">
+                                    <mat-icon fontIcon="quiz" class="mr-2"></mat-icon>
+                                    <span>Auto-evaluación</span>
+                                </button>
+                            </mat-menu>
+                        </li>
             </ul>
             
             <div class="flex items-center gap-3">
@@ -81,6 +125,18 @@
                 <span>FAQs</span>
               </a>
             </li>
+            <li class="text-[#2E4053] hover:text-[#808000] transition-colors border-t border-[#2E4053]/10 pt-4 mt-4">
+                        <a [routerLink]="['/landing/derecho']" class="flex items-center" title="Acceder a recursos de Derecho">
+                            <mat-icon fontIcon="gavel" class="mr-2"></mat-icon>
+                            <span>Derecho</span>
+                        </a>
+                    </li>
+                    <li class="text-[#2E4053] hover:text-[#808000] transition-colors">
+                        <a [routerLink]="['/landing/psicologia']" class="flex items-center" title="Acceder a recursos de Psicología">
+                            <mat-icon fontIcon="psychology" class="mr-2"></mat-icon>
+                            <span>Psicología</span>
+                        </a>
+                    </li>
             <li class="pt-4">
               <a [routerLink]="['/sign-in']" class="block w-full border-2 border-[#2E4053] text-[#2E4053] hover:bg-[#2E4053] hover:text-white font-medium px-4 py-2 rounded-md text-center transition-colors" title="Iniciar sesión">
                 Ingresar

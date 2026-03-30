@@ -5,6 +5,8 @@ import { FaqsPageComponent } from './faqs-page/faqs-page.component';
 import { GuidesPageComponent } from './guides-page/guides-page.component';
 import { GuidesComponent } from 'app/modules/landing/guides/guides.component';
 import { FaqsComponent } from 'app/modules/landing/faqs/faqs.component';
+import { DerechoComponent } from "app/modules/landing/derecho/derecho.component"
+import { PsicologiaComponent } from "app/modules/landing/psicologia/psicologia.component"
 
 export default [
     { path: '', pathMatch: 'full', redirectTo: 'landing' },
@@ -24,5 +26,13 @@ export default [
     {
         path     : 'faqs',
         component: FaqsComponent
-    }
+    },
+    {
+        path: "derecho",
+        component: DerechoComponent,
+    },
+    {
+        path: "psicologia",
+        component: PsicologiaComponent,
+    },
 ] as Routes;
