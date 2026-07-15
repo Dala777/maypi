@@ -1,0 +1,17 @@
+// Agregar estas dependencias en tu build.gradle.kts (Module: app)
+
+dependencies {
+    // Retrofit para llamadas HTTP
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    
+    // OkHttp para logging y configuración de HTTP
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+    
+    // Gson para serialización JSON
+    implementation("com.google.code.gson:gson:2.10.1")
+    
+    // Ya tienes Google Play Services para location
+    // implementation("com.google.android.gms:play-services-location:21.0.1")
+}

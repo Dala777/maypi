@@ -1,0 +1,220 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║         GUÍA PASO A PASO - IMPLEMENTACIÓN EN ANDROID STUDIO                    ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+▶━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶ PASO 1: AGREGAR DEPENDENCIAS
+▶━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Abre Android Studio
+2. En la vista de proyecto, expande tu app
+3. Encuentra el archivo: app/build.gradle.kts (Module: app)
+4. Dentro de la sección "dependencies {" agrega esto:
+
+   implementation("com.squareup.retrofit2:retrofit:2.9.0")
+   implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+   implementation("com.squareup.okhttp3:okhttp:4.11.0")
+   implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+   implementation("com.google.code.gson:gson:2.10.1")
+
+5. Click en "Sync Now" en la barra azul que aparece
+
+✅ Espera a que termine la sincronización (puede tardar 2-3 minutos)
+
+▶━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶ PASO 2: CREAR ESTRUCTURA DE DIRECTORIOS
+▶━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+En Android Studio:
+
+1. Haz clic derecho en: src/main/java/com/torrezpillcokevin/nuna/
+2. New → Package
+3. Crea: com.torrezpillcokevin.nuna.api
+4. Haz clic derecho en: src/main/java/com/torrezpillcokevin/nuna/
+5. New → Package
+6. Crea: com.torrezpillcokevin.nuna.models
+
+Estructura final:
+   src/main/java/com/torrezpillcokevin/
+   ├── nuna/
+   │   ├── api/              ← NUEVA
+   │   │   ├── ApiService.kt
+   │   │   └── RetrofitClient.kt
+   │   ├── models/           ← NUEVA
+   │   │   └── EmergencyAlertModels.kt
+   │   ├── ui/
+   │   │   └── inicio/
+   │   │       └── HomeFragment.kt (REEMPLAZAR)
+   │   └── ...
+
+▶━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶ PASO 3: CREAR ApiService.kt
+▶━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Click derecho en la carpeta: api
+2. New → Kotlin Class/File
+3. Nome: ApiService
+4. Copia TODO el contenido del archivo: ANDROID_API_SERVICE.kt
+5. Pégalo en ApiService.kt
+
+✅ Debería verse sin errores de sintaxis
+
+▶━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶ PASO 4: CREAR EmergencyAlertModels.kt
+▶━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Click derecho en la carpeta: models
+2. New → Kotlin Class/File
+3. Nome: EmergencyAlertModels
+4. Copia TODO el contenido del archivo: ANDROID_MODELS.kt
+5. Pégalo en EmergencyAlertModels.kt
+
+✅ Verifica que no hay errores
+
+▶━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶ PASO 5: CREAR RetrofitClient.kt
+▶━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Click derecho en la carpeta: api
+2. New → Kotlin Class/File
+3. Nome: RetrofitClient
+4. Copia TODO el contenido del archivo: ANDROID_RETROFIT_CLIENT.kt
+5. Pégalo en RetrofitClient.kt
+
+⚠️ IMPORTANTE: CAMBIAR LA URL
+
+Busca esta línea:
+   private const val BASE_URL = "http://tu-backend-url.com"
+
+Cambia por tu URL real:
+   - Si es localhost: "http://10.0.2.2:8000"
+   - Si es tu PC: "http://192.168.X.X:8000"
+   - Si es servidor: "https://tudominio.com"
+
+Ejemplo:
+   private const val BASE_URL = "http://10.0.2.2:8000"
+
+▶━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶ PASO 6: REEMPLAZAR HomeFragment.kt
+▶━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Abre tu archivo actual: ui/inicio/HomeFragment.kt
+2. Selecciona TODO el contenido (Ctrl+A)
+3. Borra todo
+4. Copia TODO el contenido del archivo: ANDROID_HOME_FRAGMENT_MODIFIED.kt
+5. Pégalo en HomeFragment.kt
+
+⚠️ Android Studio puede marcar errores de import. Espera a que termine de indexar
+   y los errores desaparecerán automáticamente.
+
+✅ Si aún hay errores, presiona Alt+Enter para auto-importar
+
+▶━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶ PASO 7: CONFIGURAR PERMISOS EN AndroidManifest.xml
+▶━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Abre: app/src/main/AndroidManifest.xml
+2. Antes de la etiqueta </manifest> (al final), PERO dentro del archivo, 
+   asegúrate que tengas estos permisos (busca la sección de <uses-permission>):
+
+   <uses-permission android:name="android.permission.INTERNET" />
+   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+   <uses-permission android:name="android.permission.SEND_SMS" />
+   <uses-permission android:name="android.permission.CALL_PHONE" />
+   <uses-permission android:name="android.permission.CAMERA" />
+   <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+Si ya existen algunos, no duplicar, solo agregar los que falten.
+
+▶━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶ PASO 8: GUARDAR USER ID EN LOGIN
+▶━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Encuentra donde está el código de login (probablemente en un Activity o Fragment)
+y agrega esto DESPUÉS de que el usuario se autentica exitosamente:
+
+   val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+   sharedPreferences.edit().putInt("user_id", userId).apply()
+
+IMPORTANTE: Reemplaza "userId" con la variable que contiene el ID del usuario
+
+Ejemplo:
+   // Después de autenticar al usuario
+   val userId = response.user.id  // O donde sea que obtengas el ID
+   val prefs = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+   prefs.edit().putInt("user_id", userId).apply()
+
+▶━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶ PASO 9: COMPILAR Y PROBAR
+▶━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. En Android Studio: Build → Clean Project
+2. Build → Rebuild Project (espera a que termine)
+3. Click en el botón ▶ (Play) para ejecutar la app
+4. Selecciona un emulador o dispositivo
+
+✅ Si todo compila sin errores, ¡excelente!
+❌ Si hay errores:
+   - Click derecho en el proyecto → Sync with Gradle Files
+   - Si persisten, borra carpeta .gradle y vuelve a sincronizar
+
+▶━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶ PASO 10: PROBAR FUNCIONALIDAD
+▶━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Asegúrate que el Backend está corriendo:
+   cd backend
+   python main.py
+
+2. En el emulador/dispositivo:
+   - Inicia sesión (asegúrate que se guardó el user_id)
+   - Presiona el botón rojo (redButton) en HomeFragment
+   - Otorga permisos de ubicación cuando pida
+   - Verifica que aparezcan logs en Android Studio:
+     • "Enviando alerta al backend..."
+     • "Emergency alert sent successfully"
+
+3. Verifica en la BD del backend que se guardó:
+   SELECT * FROM emergency_alerts;
+
+✅ Si ves la alerta en BD, ¡todo funciona!
+
+▶━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶ TROUBLESHOOTING
+▶━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ Error: "Unresolved reference: Retrofit"
+   → Build → Clean Project → Rebuild Project
+
+❌ Error: "Cannot connect to server"
+   → Verifica BASE_URL en RetrofitClient
+   → Asegúrate que Backend está corriendo
+   → Si es emulador, usa http://10.0.2.2:8000
+
+❌ Error: "User ID not found in SharedPreferences"
+   → Guarda el ID en el login
+   → Verifica que la clave es exactamente "user_id"
+
+❌ Botón no responde
+   → Verifica que HomeFragment se cargó
+   → Revisa los permisos en AndroidManifest.xml
+
+❌ No se guarda en BD
+   → Backend running? python main.py
+   → Base de datos creada? La tabla se crea automáticamente
+   → Ver logs del backend para más detalles
+
+▶━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶ ¡LISTO! 🎉
+▶━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Ahora tu app:
+✅ Obtiene ubicación cuando presionas botón rojo
+✅ Envía ubicación al backend
+✅ Guarda en la BD
+✅ El admin puede verlo en Angular
+
+¿Necesitas ayuda? Mira los logs en Android Studio con la tecla "6" o View → Tool Windows → Logcat
+
+════════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,356 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║           ARQUITECTURA DEL SISTEMA DE ALERTA DE EMERGENCIA                      ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+📱 APP ANDROID (Kotlin)
+══════════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  HomeFragment.kt (UI)                                                        │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  • redButton.setOnClickListener { executeEmergencyActions() }                │
+│  • executeEmergencyActions()                                                 │
+│    ├─ startRecording() - Graba audio                                         │
+│    ├─ sendEmergencyLocationSMS() - Envía SMS a contactos                    │
+│    ├─ sendEmergencyLocationToBackend() ← NUEVA FUNCIÓN                      │
+│    │  └─ Llama a sendAlertToBackend(lat, lon)                              │
+│    └─ abrirCamara() - Toma foto                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+         │
+         ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  RetrofitClient.kt (HTTP Client)                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  • BASE_URL = "http://10.0.2.2:8000"                                         │
+│  • apiService: ApiService (Realiza POST requests)                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+         │
+         ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  ApiService.kt (Interface)                                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  suspend fun sendEmergencyAlert(                                             │
+│    @Body emergencyAlert: EmergencyAlertRequest                              │
+│  ): Response<EmergencyAlertResponse>                                         │
+│                                                                              │
+│  Request:                                                                    │
+│  {                                                                           │
+│    "user_id": 5,                                                            │
+│    "latitude": -17.8252,                                                    │
+│    "longitude": -63.1687,                                                   │
+│    "description": "Alerta de emergencia desde la app",                      │
+│    "device_name": "Xiaomi Mi 11"                                            │
+│  }                                                                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+══════════════════════════════════════════════════════════════════════════════════
+                                 HTTP POST
+══════════════════════════════════════════════════════════════════════════════════
+
+⬇️  ⬇️  ⬇️  ⬇️  ⬇️ INTERNET ⬇️  ⬇️  ⬇️  ⬇️  ⬇️
+
+══════════════════════════════════════════════════════════════════════════════════
+
+🔧 BACKEND FASTAPI (Python)
+══════════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  main.py                                                                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  app.include_router(emergency_alert_router, prefix="/api/v1", ...)          │
+└─────────────────────────────────────────────────────────────────────────────┘
+         │
+         ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  controllers/emergency_alert.py                                              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  @router.post('/emergency-alerts')                                           │
+│  def store(emergency_alert_store: EmergencyAlertStore, db: Session):        │
+│      user = db.query(User).filter(User.id == user_id).first()               │
+│      if not user:                                                            │
+│          raise HTTPException(404, "Usuario no encontrado")                   │
+│      new_alert = EmergencyAlert(**emergency_alert_store.model_dump())       │
+│      db.add(new_alert)                                                       │
+│      db.commit()                                                             │
+│      return { "message": "Alerta registrada", "data": alert }                │
+└─────────────────────────────────────────────────────────────────────────────┘
+         │
+         ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  schemas/emergency_alert.py (Validación)                                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  class EmergencyAlertStore(BaseModel):                                       │
+│      user_id: int                                                            │
+│      latitude: float                                                         │
+│      longitude: float                                                        │
+│      description: Optional[str]                                              │
+│      device_name: Optional[str]                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+         │
+         ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  models/emergency_alert.py (ORM)                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  class EmergencyAlert(Base):                                                │
+│      __tablename__ = "emergency_alerts"                                      │
+│                                                                              │
+│      id: int (PK)                                                            │
+│      user_id: int (FK → users)                                              │
+│      latitude: float                                                         │
+│      longitude: float                                                        │
+│      description: str                                                        │
+│      device_name: str                                                        │
+│      status: str (default='active')                                          │
+│      created_at: datetime                                                    │
+│      updated_at: datetime                                                    │
+│                                                                              │
+│      user = relationship("User", back_populates="emergency_alerts")         │
+└─────────────────────────────────────────────────────────────────────────────┘
+         │
+         ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  config/database.py (SQLAlchemy)                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  engine = create_engine(DATABASE_URL)                                        │
+│  SessionLocal = sessionmaker(bind=engine)                                    │
+│  Base = declarative_base()                                                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+         │
+         ▼
+💾 BASE DE DATOS (PostgreSQL / MySQL / SQLite)
+══════════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  TABLE: emergency_alerts                                                     │
+├──────────┬──────────────┬──────────────────────────────────────────────────┤
+│ id       │ int          │ PRIMARY KEY AUTO_INCREMENT                       │
+├──────────┼──────────────┼──────────────────────────────────────────────────┤
+│ user_id  │ int          │ FOREIGN KEY (users.id)                           │
+├──────────┼──────────────┼──────────────────────────────────────────────────┤
+│ latitude │ float        │ NOT NULL                                         │
+├──────────┼──────────────┼──────────────────────────────────────────────────┤
+│ longitude│ float        │ NOT NULL                                         │
+├──────────┼──────────────┼──────────────────────────────────────────────────┤
+│ description │ text      │ NULLABLE                                         │
+├──────────┼──────────────┼──────────────────────────────────────────────────┤
+│ device_name │ varchar   │ NULLABLE                                         │
+├──────────┼──────────────┼──────────────────────────────────────────────────┤
+│ status   │ varchar      │ DEFAULT 'active'                                 │
+├──────────┼──────────────┼──────────────────────────────────────────────────┤
+│ created_at │ datetime   │ DEFAULT CURRENT_TIMESTAMP                        │
+├──────────┼──────────────┼──────────────────────────────────────────────────┤
+│ updated_at │ datetime   │ DEFAULT CURRENT_TIMESTAMP                        │
+└──────────┴──────────────┴──────────────────────────────────────────────────┘
+
+Example Data:
+┌───┬────────┬──────────┬───────────┬──────────┬──────────────┬────────┐
+│id │user_id │latitude  │longitude  │description    │device_name │status │
+├───┼────────┼──────────┼───────────┼──────────────────────────────────┤
+│1  │5       │-17.8252  │-63.1687   │Alerta...       │Xiaomi Mi 11│active │
+│2  │3       │-17.8300  │-63.1600   │Alerta...       │Samsung A21 │active │
+│3  │7       │-17.8400  │-63.1500   │Alerta...       │iPhone 12   │resolvd│
+└───┴────────┴──────────┴───────────┴────────────────────────────────┘
+
+══════════════════════════════════════════════════════════════════════════════════
+                                 JSON RESPONSE
+══════════════════════════════════════════════════════════════════════════════════
+
+⬆️  ⬆️  ⬆️  ⬆️  ⬆️ INTERNET ⬆️  ⬆️  ⬆️  ⬆️  ⬆️
+
+══════════════════════════════════════════════════════════════════════════════════
+
+🌐 FRONTEND ANGULAR (TypeScript/Web)
+══════════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  dashboard/components/emergency-alerts-list.component.ts                    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  emergencyAlertService.getEmergencyAlerts(page, size, search)               │
+│    ├─ loadAlerts()                                                           │
+│    ├─ onSearchChange()                                                       │
+│    ├─ viewDetails(alert) - Abre dialog con detalles                         │
+│    ├─ resolveAlert(alert) - Marca como resuelto                             │
+│    ├─ deleteAlert(alert) - Elimina la alerta                                │
+│    └─ openMapsInNewTab(alert) - Abre Google Maps                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+         │
+         ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  dashboard/services/emergency-alert.service.ts                              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  getEmergencyAlerts(page, size, search): Observable<any>                    │
+│  getEmergencyAlertById(alertId): Observable<EmergencyAlertResponse>         │
+│  updateEmergencyAlert(alertId, status): Observable<EmergencyAlertResponse>  │
+│  deleteEmergencyAlert(alertId): Observable<any>                             │
+│                                                                              │
+│  Uso de HttpClient de Angular:                                              │
+│  return this.http.get(`${this.apiUrl}/emergency-alerts`, { params })        │
+│  return this.http.patch(`${this.apiUrl}/emergency-alerts/${alertId}`, body) │
+│  return this.http.delete(`${this.apiUrl}/emergency-alerts/${alertId}`)      │
+└─────────────────────────────────────────────────────────────────────────────┘
+         │
+         ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  dashboard/components/emergency-alerts-list.component.html                  │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  <mat-table [dataSource]="emergencyAlerts">                                  │
+│     <!-- Columns: ID, Usuario, Ubicación, Dispositivo, Estado, Fecha -->    │
+│     <!-- Actions: Ver, Resolver, Eliminar -->                               │
+│  </mat-table>                                                                │
+│                                                                              │
+│  Características:                                                            │
+│  ✅ Tabla con paginación                                                     │
+│  ✅ Búsqueda en tiempo real                                                  │
+│  ✅ Link a Google Maps                                                       │
+│  ✅ Cambio de estado                                                         │
+│  ✅ Modal con detalles                                                       │
+│  ✅ Eliminar con confirmación                                                │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+══════════════════════════════════════════════════════════════════════════════════
+
+ENDPOINTS DISPONIBLES
+══════════════════════════════════════════════════════════════════════════════════
+
+📤 REQUEST (Android → Backend)
+────────────────────────────────────────────────────────────────────────────────
+POST /api/v1/emergency-alerts
+Content-Type: application/json
+
+{
+  "user_id": 5,
+  "latitude": -17.8252,
+  "longitude": -63.1687,
+  "description": "Alerta de emergencia desde la app",
+  "device_name": "Xiaomi Mi 11"
+}
+
+📥 RESPONSE
+────────────────────────────────────────────────────────────────────────────────
+{
+  "message": "Alerta de emergencia registrada correctamente",
+  "data": {
+    "id": 1,
+    "user_id": 5,
+    "latitude": -17.8252,
+    "longitude": -63.1687,
+    "description": "Alerta de emergencia desde la app",
+    "device_name": "Xiaomi Mi 11",
+    "status": "active",
+    "created_at": "2024-03-30T14:32:00",
+    "updated_at": "2024-03-30T14:32:00"
+  }
+}
+
+OTROS ENDPOINTS
+════════════════════════════════════════════════════════════════════════════════
+
+GET /api/v1/emergency-alerts
+  Parámetros: page, size, search
+  Respuesta: Lista paginada de alertas
+
+GET /api/v1/emergency-alerts/{id}
+  Respuesta: Detalle de una alerta específica
+
+PATCH /api/v1/emergency-alerts/{id}
+  Body: { "status": "resolved" }
+  Respuesta: Alerta actualizada
+
+DELETE /api/v1/emergency-alerts/{id}
+  Respuesta: Confirmación de eliminación
+
+══════════════════════════════════════════════════════════════════════════════════
+
+FLUJO TEMPORAL (Step by Step)
+══════════════════════════════════════════════════════════════════════════════════
+
+1️⃣ Usuario abre la app
+   └─ LoadData desde SharedPreferences (user_id)
+
+2️⃣ Usuario presiona botón ROJO
+   └─ executeEmergencyActions()
+      ├─ startRecording() [5 segundos de audio]
+      ├─ sendEmergencyLocationSMS() [SMS a contactos]
+      ├─ sendEmergencyLocationToBackend() ← NUEVO
+      │  └─ obtiene ubicación mediante FusedLocationProviderClient
+      │  └─ crea EmergencyAlertRequest
+      │  └─ RetrofitClient.apiService.sendEmergencyAlert(request)
+      │     └─ POST HTTP a /api/v1/emergency-alerts
+      └─ abrirCamara() [Foto]
+
+3️⃣ Backend recibe POST
+   └─ controllers/emergency_alert.py
+      ├─ Valida schema (EmergencyAlertStore)
+      ├─ Busca user en BD
+      ├─ Crea nuevo registro EmergencyAlert
+      └─ Retorna JSON response
+
+4️⃣ Android recibe respuesta
+   └─ Toast: "Alerta enviada al administrador"
+   └─ Log: "Emergency alert sent successfully"
+
+5️⃣ Admin abre Angular dashboard
+   └─ EmergencyAlertsListComponent
+      ├─ loadAlerts() → GET /api/v1/emergency-alerts
+      └─ Visualiza tabla con nuevas alertas
+
+6️⃣ Admin interactúa
+   ├─ Ver ubicación en Google Maps
+   ├─ Marcar como resuelto (PATCH)
+   └─ Eliminar alerta (DELETE)
+
+══════════════════════════════════════════════════════════════════════════════════
+
+PERMISOS REQUERIDOS (Android)
+══════════════════════════════════════════════════════════════════════════════════
+
+AndroidManifest.xml:
+├─ INTERNET (obligatorio para HTTP)
+├─ ACCESS_FINE_LOCATION (ubicación precisa)
+├─ ACCESS_COARSE_LOCATION (ubicación aproximada)
+├─ SEND_SMS (enviar SMS)
+├─ CALL_PHONE (realizar llamadas)
+├─ CAMERA (tomar fotos)
+└─ RECORD_AUDIO (grabar audio)
+
+En tiempo de ejecución:
+├─ Solicitar en requestLocationPermissions()
+├─ Validar en checkLocationPermissions()
+└─ Manejar resultado en onRequestPermissionsResult()
+
+══════════════════════════════════════════════════════════════════════════════════
+
+DEPENDENCIAS GRADLE
+══════════════════════════════════════════════════════════════════════════════════
+
+HTTP & JSON:
+├─ Retrofit 2.9.0
+├─ Gson 2.10.1
+├─ OkHttp 4.11.0
+└─ OkHttp Logging 4.11.0
+
+Estas permiten:
+├─ Realizar HTTP requests desde Android
+├─ Serializar/deserializar JSON
+└─ Loguear requests HTTP para debugging
+
+══════════════════════════════════════════════════════════════════════════════════
+
+VARIABLES URL
+══════════════════════════════════════════════════════════════════════════════════
+
+Configurable en RetrofitClient.kt:
+
+Desarrollo Local:
+  private const val BASE_URL = "http://localhost:8000"
+
+Emulador Android (desde PC):
+  private const val BASE_URL = "http://10.0.2.2:8000"
+
+Dispositivo Físico (misma red):
+  private const val BASE_URL = "http://192.168.1.X:8000"
+
+Servidor Producción:
+  private const val BASE_URL = "https://tudominio.com"
+
+══════════════════════════════════════════════════════════════════════════════════

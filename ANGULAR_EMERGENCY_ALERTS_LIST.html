@@ -1,0 +1,191 @@
+<!-- COMPONENTE: frontend/src/app/modules/dashboard/components/emergency-alerts-list.component.html -->
+
+<div class="emergency-alerts-container">
+  <!-- Encabezado -->
+  <div class="alerts-header">
+    <h2>
+      <mat-icon>warning</mat-icon>
+      Alertas de Emergencia
+    </h2>
+    <p class="subtitle">{{ totalAlerts }} alerta(s) registrada(s)</p>
+  </div>
+
+  <!-- Barra de búsqueda y filtros -->
+  <mat-card class="search-card">
+    <mat-form-field appearance="fill" class="search-field">
+      <mat-label>Buscar por usuario o descripción</mat-label>
+      <input matInput [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange($event)" />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="filter-field">
+      <mat-label>Estado</mat-label>
+      <mat-select [(ngModel)]="statusFilter" (ngModelChange)="onStatusFilterChange($event)">
+        <mat-option value="">Todos</mat-option>
+        <mat-option value="active">Activo</mat-option>
+        <mat-option value="resolved">Resuelto</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" (click)="refreshAlerts()" [disabled]="isLoading">
+      <mat-icon>refresh</mat-icon>
+      Actualizar
+    </button>
+  </mat-card>
+
+  <!-- Tabla de alertas -->
+  <mat-card class="alerts-table-card" *ngIf="!isLoading">
+    <mat-table [dataSource]="emergencyAlerts" class="alerts-table">
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
+        <mat-cell *matCellDef="let alert">{{ alert.id }}</mat-cell>
+      </ng-container>
+
+      <!-- Usuario Column -->
+      <ng-container matColumnDef="user">
+        <mat-header-cell *matHeaderCellDef>Usuario</mat-header-cell>
+        <mat-cell *matCellDef="let alert">
+          <strong>ID: {{ alert.user_id }}</strong>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Ubicación Column -->
+      <ng-container matColumnDef="location">
+        <mat-header-cell *matHeaderCellDef>Ubicación</mat-header-cell>
+        <mat-cell *matCellDef="let alert">
+          <div class="location-cell">
+            <span class="coordinates">
+              {{ alert.latitude.toFixed(4) }}, {{ alert.longitude.toFixed(4) }}
+            </span>
+            <a 
+              [href]="'https://maps.google.com/?q=' + alert.latitude + ',' + alert.longitude" 
+              target="_blank" 
+              class="maps-link"
+            >
+              <mat-icon>location_on</mat-icon>
+              Ver en Google Maps
+            </a>
+          </div>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Dispositivo Column -->
+      <ng-container matColumnDef="device">
+        <mat-header-cell *matHeaderCellDef>Dispositivo</mat-header-cell>
+        <mat-cell *matCellDef="let alert">
+          {{ alert.device_name || 'N/A' }}
+        </mat-cell>
+      </ng-container>
+
+      <!-- Estado Column -->
+      <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+        <mat-cell *matCellDef="let alert">
+          <mat-chip-set>
+            <mat-chip 
+              [highlighted]="alert.status === 'active'"
+              [color]="alert.status === 'active' ? 'warn' : 'primary'"
+            >
+              {{ alert.status === 'active' ? '🔴 Activo' : '✓ Resuelto' }}
+            </mat-chip>
+          </mat-chip-set>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Fecha Column -->
+      <ng-container matColumnDef="date">
+        <mat-header-cell *matHeaderCellDef>Fecha</mat-header-cell>
+        <mat-cell *matCellDef="let alert">
+          {{ alert.created_at | date: 'short' }}
+        </mat-cell>
+      </ng-container>
+
+      <!-- Acciones Column -->
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+        <mat-cell *matCellDef="let alert">
+          <button 
+            mat-icon-button 
+            matTooltip="Ver detalles"
+            (click)="viewDetails(alert)"
+          >
+            <mat-icon>visibility</mat-icon>
+          </button>
+          
+          <button 
+            mat-icon-button 
+            matTooltip="Marcar como resuelto"
+            *ngIf="alert.status === 'active'"
+            (click)="resolveAlert(alert)"
+            color="primary"
+          >
+            <mat-icon>check_circle</mat-icon>
+          </button>
+
+          <button 
+            mat-icon-button 
+            matTooltip="Eliminar"
+            (click)="deleteAlert(alert)"
+            color="warn"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;" class="alert-row"></mat-row>
+    </mat-table>
+
+    <!-- Paginación -->
+    <mat-paginator 
+      [pageSizeOptions]="[5, 10, 25, 50]"
+      [pageSize]="10"
+      (page)="onPageChange($event)"
+      showFirstLastButtons
+    ></mat-paginator>
+  </mat-card>
+
+  <!-- Loading -->
+  <mat-card *ngIf="isLoading" class="loading-card">
+    <mat-spinner></mat-spinner>
+    <p>Cargando alertas...</p>
+  </mat-card>
+
+  <!-- Sin resultados -->
+  <mat-card *ngIf="!isLoading && emergencyAlerts.length === 0" class="no-data-card">
+    <mat-icon>info</mat-icon>
+    <p>No hay alertas de emergencia</p>
+  </mat-card>
+</div>
+
+<!-- Dialog para detalles -->
+<ng-template #detailsDialog let-data>
+  <h2 mat-dialog-title>Detalles de la Alerta</h2>
+  <mat-dialog-content>
+    <div class="alert-details">
+      <p><strong>ID:</strong> {{ data.id }}</p>
+      <p><strong>Usuario ID:</strong> {{ data.user_id }}</p>
+      <p><strong>Latitud:</strong> {{ data.latitude }}</p>
+      <p><strong>Longitud:</strong> {{ data.longitude }}</p>
+      <p><strong>Dispositivo:</strong> {{ data.device_name || 'N/A' }}</p>
+      <p><strong>Descripción:</strong> {{ data.description || 'N/A' }}</p>
+      <p><strong>Estado:</strong> {{ data.status }}</p>
+      <p><strong>Fecha:</strong> {{ data.created_at | date: 'medium' }}</p>
+      
+      <button 
+        mat-raised-button 
+        color="primary" 
+        class="maps-button"
+        (click)="openMapsInNewTab(data)"
+      >
+        <mat-icon>location_on</mat-icon>
+        Abrir en Google Maps
+      </button>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cerrar</button>
+  </mat-dialog-actions>
+</ng-template>

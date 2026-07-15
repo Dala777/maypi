@@ -13,6 +13,7 @@ from controllers.contact_support import router as contact_router
 from controllers.device import router as device_router
 from controllers.device_registration import router as device_registration_router
 from controllers.emergency_contact import router as emergency_contact_router
+from controllers.emergency_alert import router as emergency_alert_router
 from controllers.request import router as request_router
 from controllers.missing import router as missing_router
 from controllers.permission import router as permission_router
@@ -32,6 +33,7 @@ from models.faq import Faq
 from models.device import Device
 from models.device_registration import DeviceRegistration
 from models.emergency_contact import EmergencyContact
+from models.emergency_alert import EmergencyAlert
 from models.request import Request
 from models.missing import Missing
 from models.report import Report
@@ -72,6 +74,7 @@ app.include_router(faq_router, prefix="/api/v1", tags=["faqs"])
 app.include_router(device_router, prefix="/api/v1", tags=["devices"])
 app.include_router(device_registration_router, prefix="/api/v1", tags=["devices-registration"])
 app.include_router(emergency_contact_router, prefix="/api/v1", tags=["emergency-contacts"])
+app.include_router(emergency_alert_router, prefix="/api/v1", tags=["emergency-alerts"])
 app.include_router(request_router, prefix="/api/v1", tags=["requests"])
 app.include_router(missing_router, prefix="/api/v1", tags=["missing"])
 app.include_router(report_router, prefix="/api/v1", tags=["reports"])

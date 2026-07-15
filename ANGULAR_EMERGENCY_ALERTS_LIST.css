@@ -1,0 +1,196 @@
+/* ESTILOS: frontend/src/app/modules/dashboard/components/emergency-alerts-list.component.css */
+
+.emergency-alerts-container {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.alerts-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+    color: #d32f2f;
+    font-size: 24px;
+    font-weight: 600;
+
+    mat-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+    }
+  }
+
+  .subtitle {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+  }
+}
+
+.search-card {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: #f5f5f5;
+
+  .search-field {
+    flex: 1;
+    min-width: 300px;
+  }
+
+  .filter-field {
+    min-width: 200px;
+  }
+
+  button {
+    height: 40px;
+  }
+}
+
+.alerts-table-card {
+  margin-bottom: 24px;
+
+  .alerts-table {
+    width: 100%;
+
+    .alert-row {
+      &:hover {
+        background-color: #f5f5f5;
+      }
+    }
+
+    .location-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      .coordinates {
+        font-family: 'Courier New', monospace;
+        font-size: 12px;
+        color: #666;
+      }
+
+      .maps-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 12px;
+        color: #1976d2;
+        text-decoration: none;
+        cursor: pointer;
+
+        &:hover {
+          text-decoration: underline;
+        }
+
+        mat-icon {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+        }
+      }
+    }
+  }
+}
+
+.loading-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  gap: 16px;
+
+  p {
+    margin: 0;
+    color: #666;
+  }
+}
+
+.no-data-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  gap: 16px;
+  background: #f9f9f9;
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: #ccc;
+  }
+
+  p {
+    margin: 0;
+    color: #999;
+    font-size: 16px;
+  }
+}
+
+.mat-form-field {
+  margin: 0;
+}
+
+.alert-details {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  p {
+    margin: 8px 0;
+    display: flex;
+    justify-content: space-between;
+
+    strong {
+      min-width: 140px;
+    }
+  }
+
+  .maps-button {
+    width: 100%;
+    margin-top: 16px;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .search-card {
+    flex-direction: column;
+    align-items: stretch;
+
+    .search-field,
+    .filter-field {
+      min-width: auto;
+    }
+
+    button {
+      width: 100%;
+    }
+  }
+
+  .alerts-table {
+    font-size: 12px;
+  }
+
+  .alerts-header {
+    flex-direction: column;
+    align-items: flex-start;
+
+    h2 {
+      font-size: 20px;
+    }
+  }
+}
